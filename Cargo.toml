@@ -3,7 +3,7 @@ name = "trieve-client"
 version = "0.5.8"
 authors = ["developers@trieve.ai"]
 description = "Trieve OpenAPI Specification. This document describes all of the operations available through the Trieve API."
-license = "BSL"
+license = "MIT"
 edition = "2018"
 
 [dependencies]
