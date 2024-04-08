@@ -26,8 +26,8 @@ pub struct CreateDatasetParams {
 /// struct for passing parameters to the method [`delete_dataset`]
 #[derive(Clone, Debug)]
 pub struct DeleteDatasetParams {
-    /// The organization id to use for the request
-    pub tr_organization: String,
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
     /// The id of the dataset you want to delete.
     pub dataset_id: String
 }
@@ -216,7 +216,7 @@ pub async fn delete_dataset(configuration: &configuration::Configuration, params
     let local_var_configuration = configuration;
 
     // unbox the parameters
-    let tr_organization = params.tr_organization;
+    let tr_dataset = params.tr_dataset;
     let dataset_id = params.dataset_id;
 
 
@@ -228,7 +228,7 @@ pub async fn delete_dataset(configuration: &configuration::Configuration, params
     if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
         local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
     }
-    local_var_req_builder = local_var_req_builder.header("TR-Organization", tr_organization.to_string());
+    local_var_req_builder = local_var_req_builder.header("TR-Dataset", tr_dataset.to_string());
     if let Some(ref local_var_apikey) = local_var_configuration.api_key {
         let local_var_key = local_var_apikey.key.clone();
         let local_var_value = match local_var_apikey.prefix {

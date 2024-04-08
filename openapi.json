@@ -2243,9 +2243,9 @@
         "operationId": "delete_dataset",
         "parameters": [
           {
-            "name": "TR-Organization",
+            "name": "TR-Dataset",
             "in": "header",
-            "description": "The organization id to use for the request",
+            "description": "The dataset id to use for the request",
             "required": true,
             "schema": {
               "type": "string"

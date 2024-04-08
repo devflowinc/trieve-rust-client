@@ -46,7 +46,7 @@ Name | Type | Description  | Required | Notes
 
 ## delete_dataset
 
-> delete_dataset(tr_organization, dataset_id)
+> delete_dataset(tr_dataset, dataset_id)
 Delete Dataset
 
 Delete Dataset  Delete a dataset. The auth'ed user must be an owner of the organization to delete a dataset.
@@ -56,7 +56,7 @@ Delete Dataset  Delete a dataset. The auth'ed user must be an owner of the organ
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_organization** | **String** | The organization id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id to use for the request | [required] |
 **dataset_id** | **uuid::Uuid** | The id of the dataset you want to delete. | [required] |
 
 ### Return type
