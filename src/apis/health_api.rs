@@ -15,6 +15,14 @@ use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
 
+/// struct for typed successes of method [`health_check`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum HealthCheckSuccess {
+    Status200(),
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`health_check`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -25,8 +33,11 @@ pub enum HealthCheckError {
 
 
 /// Health Check  Confirmation that the service is healthy and can make embedding vectors
-pub async fn health_check(configuration: &configuration::Configuration, ) -> Result<(), Error<HealthCheckError>> {
+pub async fn health_check(configuration: &configuration::Configuration) -> Result<ResponseContent<HealthCheckSuccess>, Error<HealthCheckError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -44,7 +55,9 @@ pub async fn health_check(configuration: &configuration::Configuration, ) -> Res
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<HealthCheckSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<HealthCheckError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };

@@ -14,6 +14,108 @@ use reqwest;
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
+/// struct for passing parameters to the method [`create_dataset`]
+#[derive(Clone, Debug)]
+pub struct CreateDatasetParams {
+    /// The organization id to use for the request
+    pub tr_organization: String,
+    /// JSON request payload to create a new dataset
+    pub create_dataset_request: models::CreateDatasetRequest
+}
+
+/// struct for passing parameters to the method [`delete_dataset`]
+#[derive(Clone, Debug)]
+pub struct DeleteDatasetParams {
+    /// The organization id to use for the request
+    pub tr_organization: String,
+    /// The id of the dataset you want to delete.
+    pub dataset_id: String
+}
+
+/// struct for passing parameters to the method [`get_client_dataset_config`]
+#[derive(Clone, Debug)]
+pub struct GetClientDatasetConfigParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String
+}
+
+/// struct for passing parameters to the method [`get_dataset`]
+#[derive(Clone, Debug)]
+pub struct GetDatasetParams {
+    /// The organization id to use for the request
+    pub tr_organization: String,
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// The id of the dataset you want to retrieve.
+    pub dataset_id: String
+}
+
+/// struct for passing parameters to the method [`get_datasets_from_organization`]
+#[derive(Clone, Debug)]
+pub struct GetDatasetsFromOrganizationParams {
+    /// The organization id to use for the request
+    pub tr_organization: String,
+    /// id of the organization you want to retrieve datasets for
+    pub organization_id: String
+}
+
+/// struct for passing parameters to the method [`update_dataset`]
+#[derive(Clone, Debug)]
+pub struct UpdateDatasetParams {
+    /// The organization id to use for the request
+    pub tr_organization: String,
+    /// JSON request payload to update a dataset
+    pub update_dataset_request: models::UpdateDatasetRequest
+}
+
+
+/// struct for typed successes of method [`create_dataset`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CreateDatasetSuccess {
+    Status200(models::Dataset),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`delete_dataset`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum DeleteDatasetSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_client_dataset_config`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetClientDatasetConfigSuccess {
+    Status200(models::ClientDatasetConfiguration),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_dataset`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetDatasetSuccess {
+    Status200(models::Dataset),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_datasets_from_organization`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetDatasetsFromOrganizationSuccess {
+    Status200(Vec<models::DatasetAndUsage>),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`update_dataset`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UpdateDatasetSuccess {
+    Status200(models::Dataset),
+    UnknownValue(serde_json::Value),
+}
 
 /// struct for typed errors of method [`create_dataset`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -65,8 +167,13 @@ pub enum UpdateDatasetError {
 
 
 /// Create dataset  Create a new dataset. The auth'ed user must be an owner of the organization to create a dataset.
-pub async fn create_dataset(configuration: &configuration::Configuration, tr_organization: &str, create_dataset_request: models::CreateDatasetRequest) -> Result<models::Dataset, Error<CreateDatasetError>> {
+pub async fn create_dataset(configuration: &configuration::Configuration, params: CreateDatasetParams) -> Result<ResponseContent<CreateDatasetSuccess>, Error<CreateDatasetError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_organization = params.tr_organization;
+    let create_dataset_request = params.create_dataset_request;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -94,7 +201,9 @@ pub async fn create_dataset(configuration: &configuration::Configuration, tr_org
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<CreateDatasetSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<CreateDatasetError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -103,8 +212,13 @@ pub async fn create_dataset(configuration: &configuration::Configuration, tr_org
 }
 
 /// Delete Dataset  Delete a dataset. The auth'ed user must be an owner of the organization to delete a dataset.
-pub async fn delete_dataset(configuration: &configuration::Configuration, tr_organization: &str, dataset_id: &str) -> Result<(), Error<DeleteDatasetError>> {
+pub async fn delete_dataset(configuration: &configuration::Configuration, params: DeleteDatasetParams) -> Result<ResponseContent<DeleteDatasetSuccess>, Error<DeleteDatasetError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_organization = params.tr_organization;
+    let dataset_id = params.dataset_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -131,7 +245,9 @@ pub async fn delete_dataset(configuration: &configuration::Configuration, tr_org
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<DeleteDatasetSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<DeleteDatasetError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -140,8 +256,12 @@ pub async fn delete_dataset(configuration: &configuration::Configuration, tr_org
 }
 
 /// Get Client Configuration  Get the client configuration for a dataset. Will use the TR-D
-pub async fn get_client_dataset_config(configuration: &configuration::Configuration, tr_dataset: &str) -> Result<models::ClientDatasetConfiguration, Error<GetClientDatasetConfigError>> {
+pub async fn get_client_dataset_config(configuration: &configuration::Configuration, params: GetClientDatasetConfigParams) -> Result<ResponseContent<GetClientDatasetConfigSuccess>, Error<GetClientDatasetConfigError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -168,7 +288,9 @@ pub async fn get_client_dataset_config(configuration: &configuration::Configurat
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetClientDatasetConfigSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetClientDatasetConfigError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -177,8 +299,14 @@ pub async fn get_client_dataset_config(configuration: &configuration::Configurat
 }
 
 /// Get Dataset  Get a dataset by id. The auth'ed user must be an admin or owner of the organization to get a dataset.
-pub async fn get_dataset(configuration: &configuration::Configuration, tr_organization: &str, tr_dataset: &str, dataset_id: &str) -> Result<models::Dataset, Error<GetDatasetError>> {
+pub async fn get_dataset(configuration: &configuration::Configuration, params: GetDatasetParams) -> Result<ResponseContent<GetDatasetSuccess>, Error<GetDatasetError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_organization = params.tr_organization;
+    let tr_dataset = params.tr_dataset;
+    let dataset_id = params.dataset_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -206,7 +334,9 @@ pub async fn get_dataset(configuration: &configuration::Configuration, tr_organi
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetDatasetSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetDatasetError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -215,8 +345,13 @@ pub async fn get_dataset(configuration: &configuration::Configuration, tr_organi
 }
 
 /// Get Datasets from Organization  Get all datasets for an organization. The auth'ed user must be an admin or owner of the organization to get its datasets.
-pub async fn get_datasets_from_organization(configuration: &configuration::Configuration, tr_organization: &str, organization_id: &str) -> Result<Vec<models::DatasetAndUsage>, Error<GetDatasetsFromOrganizationError>> {
+pub async fn get_datasets_from_organization(configuration: &configuration::Configuration, params: GetDatasetsFromOrganizationParams) -> Result<ResponseContent<GetDatasetsFromOrganizationSuccess>, Error<GetDatasetsFromOrganizationError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_organization = params.tr_organization;
+    let organization_id = params.organization_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -243,7 +378,9 @@ pub async fn get_datasets_from_organization(configuration: &configuration::Confi
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetDatasetsFromOrganizationSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetDatasetsFromOrganizationError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -252,8 +389,13 @@ pub async fn get_datasets_from_organization(configuration: &configuration::Confi
 }
 
 /// Update Dataset  Update a dataset. The auth'ed user must be an owner of the organization to update a dataset.
-pub async fn update_dataset(configuration: &configuration::Configuration, tr_organization: &str, update_dataset_request: models::UpdateDatasetRequest) -> Result<models::Dataset, Error<UpdateDatasetError>> {
+pub async fn update_dataset(configuration: &configuration::Configuration, params: UpdateDatasetParams) -> Result<ResponseContent<UpdateDatasetSuccess>, Error<UpdateDatasetError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_organization = params.tr_organization;
+    let update_dataset_request = params.update_dataset_request;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -281,7 +423,9 @@ pub async fn update_dataset(configuration: &configuration::Configuration, tr_org
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<UpdateDatasetSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<UpdateDatasetError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };

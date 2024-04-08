@@ -14,6 +14,23 @@ use reqwest;
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
+/// struct for passing parameters to the method [`post_invitation`]
+#[derive(Clone, Debug)]
+pub struct PostInvitationParams {
+    /// The organization id to use for the request
+    pub tr_organization: String,
+    /// JSON request payload to send an invitation
+    pub invitation_data: models::InvitationData
+}
+
+
+/// struct for typed successes of method [`post_invitation`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum PostInvitationSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
 
 /// struct for typed errors of method [`post_invitation`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -25,8 +42,13 @@ pub enum PostInvitationError {
 
 
 /// Send Invitation  Invitations act as a way to invite users to join an organization. After a user is invited, they will automatically be added to the organization with the role specified in the invitation once they set their.
-pub async fn post_invitation(configuration: &configuration::Configuration, tr_organization: &str, invitation_data: models::InvitationData) -> Result<(), Error<PostInvitationError>> {
+pub async fn post_invitation(configuration: &configuration::Configuration, params: PostInvitationParams) -> Result<ResponseContent<PostInvitationSuccess>, Error<PostInvitationError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_organization = params.tr_organization;
+    let invitation_data = params.invitation_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -54,7 +76,9 @@ pub async fn post_invitation(configuration: &configuration::Configuration, tr_or
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<PostInvitationSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<PostInvitationError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };

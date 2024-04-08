@@ -14,6 +14,193 @@ use reqwest;
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
+/// struct for passing parameters to the method [`create_chunk`]
+#[derive(Clone, Debug)]
+pub struct CreateChunkParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to create a new chunk (chunk)
+    pub create_chunk_data: models::CreateChunkData
+}
+
+/// struct for passing parameters to the method [`create_suggested_queries_handler`]
+#[derive(Clone, Debug)]
+pub struct CreateSuggestedQueriesHandlerParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to get alternative suggested queries
+    pub suggested_queries_request: models::SuggestedQueriesRequest
+}
+
+/// struct for passing parameters to the method [`delete_chunk`]
+#[derive(Clone, Debug)]
+pub struct DeleteChunkParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// Id of the chunk you want to fetch.
+    pub chunk_id: String
+}
+
+/// struct for passing parameters to the method [`delete_chunk_by_tracking_id`]
+#[derive(Clone, Debug)]
+pub struct DeleteChunkByTrackingIdParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// tracking_id of the chunk you want to delete
+    pub tracking_id: String
+}
+
+/// struct for passing parameters to the method [`generate_off_chunks`]
+#[derive(Clone, Debug)]
+pub struct GenerateOffChunksParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to perform RAG on some chunks (chunks)
+    pub generate_chunks_request: models::GenerateChunksRequest
+}
+
+/// struct for passing parameters to the method [`get_chunk_by_id`]
+#[derive(Clone, Debug)]
+pub struct GetChunkByIdParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// Id of the chunk you want to fetch.
+    pub chunk_id: String
+}
+
+/// struct for passing parameters to the method [`get_chunk_by_tracking_id`]
+#[derive(Clone, Debug)]
+pub struct GetChunkByTrackingIdParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// tracking_id of the chunk you want to fetch
+    pub tracking_id: String
+}
+
+/// struct for passing parameters to the method [`get_recommended_chunks`]
+#[derive(Clone, Debug)]
+pub struct GetRecommendedChunksParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to get recommendations of chunks similar to the chunks in the request
+    pub recommend_chunks_request: models::RecommendChunksRequest
+}
+
+/// struct for passing parameters to the method [`search_chunk`]
+#[derive(Clone, Debug)]
+pub struct SearchChunkParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to semantically search for chunks (chunks)
+    pub search_chunk_data: models::SearchChunkData
+}
+
+/// struct for passing parameters to the method [`update_chunk`]
+#[derive(Clone, Debug)]
+pub struct UpdateChunkParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to update a chunk (chunk)
+    pub update_chunk_data: models::UpdateChunkData
+}
+
+/// struct for passing parameters to the method [`update_chunk_by_tracking_id`]
+#[derive(Clone, Debug)]
+pub struct UpdateChunkByTrackingIdParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to update a chunk by tracking_id (chunks)
+    pub update_chunk_by_tracking_id_data: models::UpdateChunkByTrackingIdData
+}
+
+
+/// struct for typed successes of method [`create_chunk`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CreateChunkSuccess {
+    Status200(models::ReturnQueuedChunk),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`create_suggested_queries_handler`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CreateSuggestedQueriesHandlerSuccess {
+    Status200(models::SuggestedQueriesResponse),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`delete_chunk`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum DeleteChunkSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`delete_chunk_by_tracking_id`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum DeleteChunkByTrackingIdSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`generate_off_chunks`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GenerateOffChunksSuccess {
+    Status200(String),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_chunk_by_id`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetChunkByIdSuccess {
+    Status200(models::ChunkMetadata),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_chunk_by_tracking_id`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetChunkByTrackingIdSuccess {
+    Status200(models::ChunkMetadata),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_recommended_chunks`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetRecommendedChunksSuccess {
+    Status200(models::RecommendChunksResponseTypes),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`search_chunk`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum SearchChunkSuccess {
+    Status200(models::SearchChunkResponseTypes),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`update_chunk`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UpdateChunkSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`update_chunk_by_tracking_id`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UpdateChunkByTrackingIdSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
 
 /// struct for typed errors of method [`create_chunk`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -106,8 +293,13 @@ pub enum UpdateChunkByTrackingIdError {
 
 
 /// Create or Upsert Chunk or Chunks  Create a new chunk. If the chunk has the same tracking_id as an existing chunk, the request will fail. Once a chunk is created, it can be searched for using the search endpoint.
-pub async fn create_chunk(configuration: &configuration::Configuration, tr_dataset: &str, create_chunk_data: models::CreateChunkData) -> Result<models::ReturnQueuedChunk, Error<CreateChunkError>> {
+pub async fn create_chunk(configuration: &configuration::Configuration, params: CreateChunkParams) -> Result<ResponseContent<CreateChunkSuccess>, Error<CreateChunkError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let create_chunk_data = params.create_chunk_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -135,7 +327,9 @@ pub async fn create_chunk(configuration: &configuration::Configuration, tr_datas
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<CreateChunkSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<CreateChunkError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -144,8 +338,13 @@ pub async fn create_chunk(configuration: &configuration::Configuration, tr_datas
 }
 
 /// Generate suggested queries  This endpoint will generate 3 suggested queries based off the query provided in the request body and return them as a JSON object.
-pub async fn create_suggested_queries_handler(configuration: &configuration::Configuration, tr_dataset: &str, suggested_queries_request: models::SuggestedQueriesRequest) -> Result<models::SuggestedQueriesResponse, Error<CreateSuggestedQueriesHandlerError>> {
+pub async fn create_suggested_queries_handler(configuration: &configuration::Configuration, params: CreateSuggestedQueriesHandlerParams) -> Result<ResponseContent<CreateSuggestedQueriesHandlerSuccess>, Error<CreateSuggestedQueriesHandlerError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let suggested_queries_request = params.suggested_queries_request;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -173,7 +372,9 @@ pub async fn create_suggested_queries_handler(configuration: &configuration::Con
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<CreateSuggestedQueriesHandlerSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<CreateSuggestedQueriesHandlerError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -182,8 +383,13 @@ pub async fn create_suggested_queries_handler(configuration: &configuration::Con
 }
 
 /// Delete Chunk  Delete a chunk by its id. If deleting a root chunk which has a collision, the most recently created collision will become a new root chunk.
-pub async fn delete_chunk(configuration: &configuration::Configuration, tr_dataset: &str, chunk_id: &str) -> Result<(), Error<DeleteChunkError>> {
+pub async fn delete_chunk(configuration: &configuration::Configuration, params: DeleteChunkParams) -> Result<ResponseContent<DeleteChunkSuccess>, Error<DeleteChunkError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let chunk_id = params.chunk_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -210,7 +416,9 @@ pub async fn delete_chunk(configuration: &configuration::Configuration, tr_datas
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<DeleteChunkSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<DeleteChunkError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -219,8 +427,13 @@ pub async fn delete_chunk(configuration: &configuration::Configuration, tr_datas
 }
 
 /// Delete Chunk By Tracking Id  Delete a chunk by tracking_id. This is useful for when you are coordinating with an external system and want to use the tracking_id to identify the chunk. If deleting a root chunk which has a collision, the most recently created collision will become a new root chunk.
-pub async fn delete_chunk_by_tracking_id(configuration: &configuration::Configuration, tr_dataset: &str, tracking_id: &str) -> Result<(), Error<DeleteChunkByTrackingIdError>> {
+pub async fn delete_chunk_by_tracking_id(configuration: &configuration::Configuration, params: DeleteChunkByTrackingIdParams) -> Result<ResponseContent<DeleteChunkByTrackingIdSuccess>, Error<DeleteChunkByTrackingIdError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let tracking_id = params.tracking_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -247,7 +460,9 @@ pub async fn delete_chunk_by_tracking_id(configuration: &configuration::Configur
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<DeleteChunkByTrackingIdSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<DeleteChunkByTrackingIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -256,8 +471,13 @@ pub async fn delete_chunk_by_tracking_id(configuration: &configuration::Configur
 }
 
 /// RAG on Specified Chunks  This endpoint exists as an alternative to the topic+message concept where our API handles chat memory. With this endpoint, the user is responsible for providing the context window and the prompt. See more in the \"search before generate\" page at docs.trieve.ai.
-pub async fn generate_off_chunks(configuration: &configuration::Configuration, tr_dataset: &str, generate_chunks_request: models::GenerateChunksRequest) -> Result<String, Error<GenerateOffChunksError>> {
+pub async fn generate_off_chunks(configuration: &configuration::Configuration, params: GenerateOffChunksParams) -> Result<ResponseContent<GenerateOffChunksSuccess>, Error<GenerateOffChunksError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let generate_chunks_request = params.generate_chunks_request;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -285,7 +505,9 @@ pub async fn generate_off_chunks(configuration: &configuration::Configuration, t
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GenerateOffChunksSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GenerateOffChunksError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -294,8 +516,13 @@ pub async fn generate_off_chunks(configuration: &configuration::Configuration, t
 }
 
 /// Get Chunk By Id  Get a singular chunk by id.
-pub async fn get_chunk_by_id(configuration: &configuration::Configuration, tr_dataset: &str, chunk_id: &str) -> Result<models::ChunkMetadata, Error<GetChunkByIdError>> {
+pub async fn get_chunk_by_id(configuration: &configuration::Configuration, params: GetChunkByIdParams) -> Result<ResponseContent<GetChunkByIdSuccess>, Error<GetChunkByIdError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let chunk_id = params.chunk_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -322,7 +549,9 @@ pub async fn get_chunk_by_id(configuration: &configuration::Configuration, tr_da
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetChunkByIdSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetChunkByIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -331,8 +560,13 @@ pub async fn get_chunk_by_id(configuration: &configuration::Configuration, tr_da
 }
 
 /// Get Chunk By Tracking Id  Get a singular chunk by tracking_id. This is useful for when you are coordinating with an external system and want to use your own id as the primary reference for a chunk.
-pub async fn get_chunk_by_tracking_id(configuration: &configuration::Configuration, tr_dataset: &str, tracking_id: &str) -> Result<models::ChunkMetadata, Error<GetChunkByTrackingIdError>> {
+pub async fn get_chunk_by_tracking_id(configuration: &configuration::Configuration, params: GetChunkByTrackingIdParams) -> Result<ResponseContent<GetChunkByTrackingIdSuccess>, Error<GetChunkByTrackingIdError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let tracking_id = params.tracking_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -359,7 +593,9 @@ pub async fn get_chunk_by_tracking_id(configuration: &configuration::Configurati
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetChunkByTrackingIdSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetChunkByTrackingIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -368,8 +604,13 @@ pub async fn get_chunk_by_tracking_id(configuration: &configuration::Configurati
 }
 
 /// Get Recommended Chunks  Get recommendations of chunks similar to the chunks in the request. Think about this as a feature similar to the \"add to playlist\" recommendation feature on Spotify. This request pairs especially well with our groups endpoint.
-pub async fn get_recommended_chunks(configuration: &configuration::Configuration, tr_dataset: &str, recommend_chunks_request: models::RecommendChunksRequest) -> Result<models::RecommendChunksResponseTypes, Error<GetRecommendedChunksError>> {
+pub async fn get_recommended_chunks(configuration: &configuration::Configuration, params: GetRecommendedChunksParams) -> Result<ResponseContent<GetRecommendedChunksSuccess>, Error<GetRecommendedChunksError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let recommend_chunks_request = params.recommend_chunks_request;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -397,7 +638,9 @@ pub async fn get_recommended_chunks(configuration: &configuration::Configuration
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetRecommendedChunksSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetRecommendedChunksError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -406,8 +649,13 @@ pub async fn get_recommended_chunks(configuration: &configuration::Configuration
 }
 
 /// Search  This route provides the primary search functionality for the API. It can be used to search for chunks by semantic similarity, full-text similarity, or a combination of both. Results' `chunk_html` values will be modified with `<b>` tags for sub-sentence highlighting.
-pub async fn search_chunk(configuration: &configuration::Configuration, tr_dataset: &str, search_chunk_data: models::SearchChunkData) -> Result<models::SearchChunkResponseTypes, Error<SearchChunkError>> {
+pub async fn search_chunk(configuration: &configuration::Configuration, params: SearchChunkParams) -> Result<ResponseContent<SearchChunkSuccess>, Error<SearchChunkError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let search_chunk_data = params.search_chunk_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -435,7 +683,9 @@ pub async fn search_chunk(configuration: &configuration::Configuration, tr_datas
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<SearchChunkSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<SearchChunkError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -444,8 +694,13 @@ pub async fn search_chunk(configuration: &configuration::Configuration, tr_datas
 }
 
 /// Update Chunk  Update a chunk. If you try to change the tracking_id of the chunk to have the same tracking_id as an existing chunk, the request will fail.
-pub async fn update_chunk(configuration: &configuration::Configuration, tr_dataset: &str, update_chunk_data: models::UpdateChunkData) -> Result<(), Error<UpdateChunkError>> {
+pub async fn update_chunk(configuration: &configuration::Configuration, params: UpdateChunkParams) -> Result<ResponseContent<UpdateChunkSuccess>, Error<UpdateChunkError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let update_chunk_data = params.update_chunk_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -473,7 +728,9 @@ pub async fn update_chunk(configuration: &configuration::Configuration, tr_datas
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<UpdateChunkSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<UpdateChunkError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -482,8 +739,13 @@ pub async fn update_chunk(configuration: &configuration::Configuration, tr_datas
 }
 
 /// Update Chunk By Tracking Id  Update a chunk by tracking_id. This is useful for when you are coordinating with an external system and want to use the tracking_id to identify the chunk.
-pub async fn update_chunk_by_tracking_id(configuration: &configuration::Configuration, tr_dataset: &str, update_chunk_by_tracking_id_data: models::UpdateChunkByTrackingIdData) -> Result<(), Error<UpdateChunkByTrackingIdError>> {
+pub async fn update_chunk_by_tracking_id(configuration: &configuration::Configuration, params: UpdateChunkByTrackingIdParams) -> Result<ResponseContent<UpdateChunkByTrackingIdSuccess>, Error<UpdateChunkByTrackingIdError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let update_chunk_by_tracking_id_data = params.update_chunk_by_tracking_id_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -511,7 +773,9 @@ pub async fn update_chunk_by_tracking_id(configuration: &configuration::Configur
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<UpdateChunkByTrackingIdSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<UpdateChunkByTrackingIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };

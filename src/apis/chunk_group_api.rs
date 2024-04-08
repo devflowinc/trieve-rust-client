@@ -14,6 +14,311 @@ use reqwest;
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
+/// struct for passing parameters to the method [`add_chunk_to_group`]
+#[derive(Clone, Debug)]
+pub struct AddChunkToGroupParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// Id of the group to add the chunk to as a bookmark
+    pub group_id: String,
+    /// JSON request payload to add a chunk to a group (bookmark it)
+    pub add_chunk_to_group_data: models::AddChunkToGroupData
+}
+
+/// struct for passing parameters to the method [`add_chunk_to_group_by_tracking_id`]
+#[derive(Clone, Debug)]
+pub struct AddChunkToGroupByTrackingIdParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// Id of the group to add the chunk to as a bookmark
+    pub tracking_id: String,
+    /// JSON request payload to add a chunk to a group (bookmark it)
+    pub add_chunk_to_group_data: models::AddChunkToGroupData
+}
+
+/// struct for passing parameters to the method [`create_chunk_group`]
+#[derive(Clone, Debug)]
+pub struct CreateChunkGroupParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to cretea a chunkGroup
+    pub create_chunk_group_data: models::CreateChunkGroupData
+}
+
+/// struct for passing parameters to the method [`delete_chunk_group`]
+#[derive(Clone, Debug)]
+pub struct DeleteChunkGroupParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// Id of the group you want to fetch.
+    pub group_id: String,
+    /// Delete the chunks within the group
+    pub delete_chunks: bool
+}
+
+/// struct for passing parameters to the method [`delete_group_by_tracking_id`]
+#[derive(Clone, Debug)]
+pub struct DeleteGroupByTrackingIdParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// Tracking id of the chunk_group to delete
+    pub tracking_id: String
+}
+
+/// struct for passing parameters to the method [`get_chunk_group`]
+#[derive(Clone, Debug)]
+pub struct GetChunkGroupParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// Id of the group you want to fetch.
+    pub group_id: String
+}
+
+/// struct for passing parameters to the method [`get_chunks_in_group`]
+#[derive(Clone, Debug)]
+pub struct GetChunksInGroupParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// Id of the group you want to fetch.
+    pub group_id: String,
+    /// The page of chunks to get from the group
+    pub page: Option<i64>
+}
+
+/// struct for passing parameters to the method [`get_chunks_in_group_by_tracking_id`]
+#[derive(Clone, Debug)]
+pub struct GetChunksInGroupByTrackingIdParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// The id of the group to get the chunks from
+    pub group_tracking_id: String,
+    /// The page of chunks to get from the group
+    pub page: i64
+}
+
+/// struct for passing parameters to the method [`get_group_by_tracking_id`]
+#[derive(Clone, Debug)]
+pub struct GetGroupByTrackingIdParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// The tracking id of the group to fetch.
+    pub tracking_id: String
+}
+
+/// struct for passing parameters to the method [`get_groups_chunk_is_in`]
+#[derive(Clone, Debug)]
+pub struct GetGroupsChunkIsInParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to get the groups that a chunk is in
+    pub get_groups_for_chunks_data: models::GetGroupsForChunksData
+}
+
+/// struct for passing parameters to the method [`get_recommended_groups`]
+#[derive(Clone, Debug)]
+pub struct GetRecommendedGroupsParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to get recommendations of chunks similar to the chunks in the request
+    pub reccomend_group_chunks_request: models::ReccomendGroupChunksRequest
+}
+
+/// struct for passing parameters to the method [`get_specific_dataset_chunk_groups`]
+#[derive(Clone, Debug)]
+pub struct GetSpecificDatasetChunkGroupsParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// The id of the dataset to fetch groups for.
+    pub dataset_id: String,
+    /// The page of groups to fetch. Page is 1-indexed.
+    pub page: i64
+}
+
+/// struct for passing parameters to the method [`remove_chunk_from_group`]
+#[derive(Clone, Debug)]
+pub struct RemoveChunkFromGroupParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// Id of the group to remove the bookmark'ed chunk from
+    pub group_id: String,
+    /// JSON request payload to cretea a chunkGroup
+    pub create_chunk_group_data: models::CreateChunkGroupData
+}
+
+/// struct for passing parameters to the method [`search_over_groups`]
+#[derive(Clone, Debug)]
+pub struct SearchOverGroupsParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to semantically search over groups
+    pub search_over_groups_data: models::SearchOverGroupsData
+}
+
+/// struct for passing parameters to the method [`search_within_group`]
+#[derive(Clone, Debug)]
+pub struct SearchWithinGroupParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to semantically search a group
+    pub search_within_group_data: models::SearchWithinGroupData
+}
+
+/// struct for passing parameters to the method [`update_chunk_group`]
+#[derive(Clone, Debug)]
+pub struct UpdateChunkGroupParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to update a chunkGroup
+    pub update_chunk_group_data: models::UpdateChunkGroupData
+}
+
+/// struct for passing parameters to the method [`update_group_by_tracking_id`]
+#[derive(Clone, Debug)]
+pub struct UpdateGroupByTrackingIdParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// Tracking id of the chunk_group to update
+    pub tracking_id: String,
+    /// JSON request payload to update a chunkGroup
+    pub update_group_by_tracking_id_data: models::UpdateGroupByTrackingIdData
+}
+
+
+/// struct for typed successes of method [`add_chunk_to_group`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum AddChunkToGroupSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`add_chunk_to_group_by_tracking_id`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum AddChunkToGroupByTrackingIdSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`create_chunk_group`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CreateChunkGroupSuccess {
+    Status200(models::ChunkGroup),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`delete_chunk_group`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum DeleteChunkGroupSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`delete_group_by_tracking_id`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum DeleteGroupByTrackingIdSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_chunk_group`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetChunkGroupSuccess {
+    Status200(models::ChunkGroup),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_chunks_in_group`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetChunksInGroupSuccess {
+    Status200(models::BookmarkData),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_chunks_in_group_by_tracking_id`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetChunksInGroupByTrackingIdSuccess {
+    Status200(models::BookmarkData),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_group_by_tracking_id`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetGroupByTrackingIdSuccess {
+    Status200(models::ChunkGroup),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_groups_chunk_is_in`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetGroupsChunkIsInSuccess {
+    Status200(Vec<models::BookmarkGroupResult>),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_recommended_groups`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetRecommendedGroupsSuccess {
+    Status200(models::RecommendGroupChunkResponseTypes),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_specific_dataset_chunk_groups`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetSpecificDatasetChunkGroupsSuccess {
+    Status200(models::GroupData),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`remove_chunk_from_group`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum RemoveChunkFromGroupSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`search_over_groups`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum SearchOverGroupsSuccess {
+    Status200(models::SearchOverGroupsResponseTypes),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`search_within_group`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum SearchWithinGroupSuccess {
+    Status200(models::SearchWithinGroupResponseTypes),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`update_chunk_group`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UpdateChunkGroupSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`update_group_by_tracking_id`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UpdateGroupByTrackingIdSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
 
 /// struct for typed errors of method [`add_chunk_to_group`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -153,8 +458,14 @@ pub enum UpdateGroupByTrackingIdError {
 
 
 /// Add Chunk to Group  Route to add a chunk to a group.
-pub async fn add_chunk_to_group(configuration: &configuration::Configuration, tr_dataset: &str, group_id: &str, add_chunk_to_group_data: models::AddChunkToGroupData) -> Result<(), Error<AddChunkToGroupError>> {
+pub async fn add_chunk_to_group(configuration: &configuration::Configuration, params: AddChunkToGroupParams) -> Result<ResponseContent<AddChunkToGroupSuccess>, Error<AddChunkToGroupError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let group_id = params.group_id;
+    let add_chunk_to_group_data = params.add_chunk_to_group_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -182,7 +493,9 @@ pub async fn add_chunk_to_group(configuration: &configuration::Configuration, tr
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<AddChunkToGroupSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<AddChunkToGroupError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -191,8 +504,14 @@ pub async fn add_chunk_to_group(configuration: &configuration::Configuration, tr
 }
 
 /// Add Chunk to Group by Tracking ID  Route to add a chunk to a group by tracking id.
-pub async fn add_chunk_to_group_by_tracking_id(configuration: &configuration::Configuration, tr_dataset: &str, tracking_id: &str, add_chunk_to_group_data: models::AddChunkToGroupData) -> Result<(), Error<AddChunkToGroupByTrackingIdError>> {
+pub async fn add_chunk_to_group_by_tracking_id(configuration: &configuration::Configuration, params: AddChunkToGroupByTrackingIdParams) -> Result<ResponseContent<AddChunkToGroupByTrackingIdSuccess>, Error<AddChunkToGroupByTrackingIdError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let tracking_id = params.tracking_id;
+    let add_chunk_to_group_data = params.add_chunk_to_group_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -220,7 +539,9 @@ pub async fn add_chunk_to_group_by_tracking_id(configuration: &configuration::Co
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<AddChunkToGroupByTrackingIdSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<AddChunkToGroupByTrackingIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -229,8 +550,13 @@ pub async fn add_chunk_to_group_by_tracking_id(configuration: &configuration::Co
 }
 
 /// Create Chunk Group  Create a new chunk_group. This is a way to group chunks together. If you try to create a chunk_group with the same tracking_id as an existing chunk_group, this operation will fail.
-pub async fn create_chunk_group(configuration: &configuration::Configuration, tr_dataset: &str, create_chunk_group_data: models::CreateChunkGroupData) -> Result<models::ChunkGroup, Error<CreateChunkGroupError>> {
+pub async fn create_chunk_group(configuration: &configuration::Configuration, params: CreateChunkGroupParams) -> Result<ResponseContent<CreateChunkGroupSuccess>, Error<CreateChunkGroupError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let create_chunk_group_data = params.create_chunk_group_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -258,7 +584,9 @@ pub async fn create_chunk_group(configuration: &configuration::Configuration, tr
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<CreateChunkGroupSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<CreateChunkGroupError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -267,8 +595,14 @@ pub async fn create_chunk_group(configuration: &configuration::Configuration, tr
 }
 
 /// Delete Group  This will delete a chunk_group. If you set delete_chunks to true, it will also delete the chunks within the group.
-pub async fn delete_chunk_group(configuration: &configuration::Configuration, tr_dataset: &str, group_id: &str, delete_chunks: bool) -> Result<(), Error<DeleteChunkGroupError>> {
+pub async fn delete_chunk_group(configuration: &configuration::Configuration, params: DeleteChunkGroupParams) -> Result<ResponseContent<DeleteChunkGroupSuccess>, Error<DeleteChunkGroupError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let group_id = params.group_id;
+    let delete_chunks = params.delete_chunks;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -296,7 +630,9 @@ pub async fn delete_chunk_group(configuration: &configuration::Configuration, tr
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<DeleteChunkGroupSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<DeleteChunkGroupError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -305,8 +641,13 @@ pub async fn delete_chunk_group(configuration: &configuration::Configuration, tr
 }
 
 /// Delete Group by Tracking ID  Delete a chunk_group with the given tracking id.
-pub async fn delete_group_by_tracking_id(configuration: &configuration::Configuration, tr_dataset: &str, tracking_id: &str) -> Result<(), Error<DeleteGroupByTrackingIdError>> {
+pub async fn delete_group_by_tracking_id(configuration: &configuration::Configuration, params: DeleteGroupByTrackingIdParams) -> Result<ResponseContent<DeleteGroupByTrackingIdSuccess>, Error<DeleteGroupByTrackingIdError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let tracking_id = params.tracking_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -333,7 +674,9 @@ pub async fn delete_group_by_tracking_id(configuration: &configuration::Configur
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<DeleteGroupByTrackingIdSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<DeleteGroupByTrackingIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -342,8 +685,13 @@ pub async fn delete_group_by_tracking_id(configuration: &configuration::Configur
 }
 
 /// Get Group  Fetch the group with the given id. get_group
-pub async fn get_chunk_group(configuration: &configuration::Configuration, tr_dataset: &str, group_id: &str) -> Result<models::ChunkGroup, Error<GetChunkGroupError>> {
+pub async fn get_chunk_group(configuration: &configuration::Configuration, params: GetChunkGroupParams) -> Result<ResponseContent<GetChunkGroupSuccess>, Error<GetChunkGroupError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let group_id = params.group_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -370,7 +718,9 @@ pub async fn get_chunk_group(configuration: &configuration::Configuration, tr_da
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetChunkGroupSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetChunkGroupError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -379,8 +729,14 @@ pub async fn get_chunk_group(configuration: &configuration::Configuration, tr_da
 }
 
 /// Get Chunks in Group  Route to get all chunks for a group. The response is paginated, with each page containing 10 chunks. Page is 1-indexed.
-pub async fn get_chunks_in_group(configuration: &configuration::Configuration, tr_dataset: &str, group_id: &str, page: Option<i64>) -> Result<models::BookmarkData, Error<GetChunksInGroupError>> {
+pub async fn get_chunks_in_group(configuration: &configuration::Configuration, params: GetChunksInGroupParams) -> Result<ResponseContent<GetChunksInGroupSuccess>, Error<GetChunksInGroupError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let group_id = params.group_id;
+    let page = params.page;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -407,7 +763,9 @@ pub async fn get_chunks_in_group(configuration: &configuration::Configuration, t
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetChunksInGroupSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetChunksInGroupError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -416,8 +774,14 @@ pub async fn get_chunks_in_group(configuration: &configuration::Configuration, t
 }
 
 /// Get Chunks in Group by Tracking ID  Route to get all chunks for a group. The response is paginated, with each page containing 10 chunks. Support for custom page size is coming soon. Page is 1-indexed.
-pub async fn get_chunks_in_group_by_tracking_id(configuration: &configuration::Configuration, tr_dataset: &str, group_tracking_id: &str, page: i64) -> Result<models::BookmarkData, Error<GetChunksInGroupByTrackingIdError>> {
+pub async fn get_chunks_in_group_by_tracking_id(configuration: &configuration::Configuration, params: GetChunksInGroupByTrackingIdParams) -> Result<ResponseContent<GetChunksInGroupByTrackingIdSuccess>, Error<GetChunksInGroupByTrackingIdError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let group_tracking_id = params.group_tracking_id;
+    let page = params.page;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -444,7 +808,9 @@ pub async fn get_chunks_in_group_by_tracking_id(configuration: &configuration::C
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetChunksInGroupByTrackingIdSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetChunksInGroupByTrackingIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -453,8 +819,13 @@ pub async fn get_chunks_in_group_by_tracking_id(configuration: &configuration::C
 }
 
 /// Get Group by Tracking ID  Fetch the group with the given tracking id. get_group_by_tracking_id
-pub async fn get_group_by_tracking_id(configuration: &configuration::Configuration, tr_dataset: &str, tracking_id: &str) -> Result<models::ChunkGroup, Error<GetGroupByTrackingIdError>> {
+pub async fn get_group_by_tracking_id(configuration: &configuration::Configuration, params: GetGroupByTrackingIdParams) -> Result<ResponseContent<GetGroupByTrackingIdSuccess>, Error<GetGroupByTrackingIdError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let tracking_id = params.tracking_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -481,7 +852,9 @@ pub async fn get_group_by_tracking_id(configuration: &configuration::Configurati
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetGroupByTrackingIdSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetGroupByTrackingIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -490,8 +863,13 @@ pub async fn get_group_by_tracking_id(configuration: &configuration::Configurati
 }
 
 /// Get Groups for Chunks  Route to get the groups that a chunk is in.
-pub async fn get_groups_chunk_is_in(configuration: &configuration::Configuration, tr_dataset: &str, get_groups_for_chunks_data: models::GetGroupsForChunksData) -> Result<Vec<models::BookmarkGroupResult>, Error<GetGroupsChunkIsInError>> {
+pub async fn get_groups_chunk_is_in(configuration: &configuration::Configuration, params: GetGroupsChunkIsInParams) -> Result<ResponseContent<GetGroupsChunkIsInSuccess>, Error<GetGroupsChunkIsInError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let get_groups_for_chunks_data = params.get_groups_for_chunks_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -519,7 +897,9 @@ pub async fn get_groups_chunk_is_in(configuration: &configuration::Configuration
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetGroupsChunkIsInSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetGroupsChunkIsInError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -528,8 +908,13 @@ pub async fn get_groups_chunk_is_in(configuration: &configuration::Configuration
 }
 
 /// Get Recommended Groups  Route to get recommended groups. This route will return groups which are similar to the groups in the request body.
-pub async fn get_recommended_groups(configuration: &configuration::Configuration, tr_dataset: &str, reccomend_group_chunks_request: models::ReccomendGroupChunksRequest) -> Result<models::RecommendGroupChunkResponseTypes, Error<GetRecommendedGroupsError>> {
+pub async fn get_recommended_groups(configuration: &configuration::Configuration, params: GetRecommendedGroupsParams) -> Result<ResponseContent<GetRecommendedGroupsSuccess>, Error<GetRecommendedGroupsError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let reccomend_group_chunks_request = params.reccomend_group_chunks_request;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -557,7 +942,9 @@ pub async fn get_recommended_groups(configuration: &configuration::Configuration
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetRecommendedGroupsSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetRecommendedGroupsError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -566,8 +953,14 @@ pub async fn get_recommended_groups(configuration: &configuration::Configuration
 }
 
 /// Get Groups for Dataset  Fetch the groups which belong to a dataset specified by its id.
-pub async fn get_specific_dataset_chunk_groups(configuration: &configuration::Configuration, tr_dataset: &str, dataset_id: &str, page: i64) -> Result<models::GroupData, Error<GetSpecificDatasetChunkGroupsError>> {
+pub async fn get_specific_dataset_chunk_groups(configuration: &configuration::Configuration, params: GetSpecificDatasetChunkGroupsParams) -> Result<ResponseContent<GetSpecificDatasetChunkGroupsSuccess>, Error<GetSpecificDatasetChunkGroupsError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let dataset_id = params.dataset_id;
+    let page = params.page;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -594,7 +987,9 @@ pub async fn get_specific_dataset_chunk_groups(configuration: &configuration::Co
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetSpecificDatasetChunkGroupsSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetSpecificDatasetChunkGroupsError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -603,8 +998,14 @@ pub async fn get_specific_dataset_chunk_groups(configuration: &configuration::Co
 }
 
 /// Remove Chunk from Group  Route to remove a chunk from a group.
-pub async fn remove_chunk_from_group(configuration: &configuration::Configuration, tr_dataset: &str, group_id: &str, create_chunk_group_data: models::CreateChunkGroupData) -> Result<(), Error<RemoveChunkFromGroupError>> {
+pub async fn remove_chunk_from_group(configuration: &configuration::Configuration, params: RemoveChunkFromGroupParams) -> Result<ResponseContent<RemoveChunkFromGroupSuccess>, Error<RemoveChunkFromGroupError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let group_id = params.group_id;
+    let create_chunk_group_data = params.create_chunk_group_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -632,7 +1033,9 @@ pub async fn remove_chunk_from_group(configuration: &configuration::Configuratio
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<RemoveChunkFromGroupSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<RemoveChunkFromGroupError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -641,8 +1044,13 @@ pub async fn remove_chunk_from_group(configuration: &configuration::Configuratio
 }
 
 /// Search Over Groups  This route allows you to get groups as results instead of chunks. Each group returned will have the matching chunks sorted by similarity within the group. This is useful for when you want to get groups of chunks which are similar to the search query. If choosing hybrid search, the results will be re-ranked using BAAI/bge-reranker-large. Compatible with semantic, fulltext, or hybrid search modes.
-pub async fn search_over_groups(configuration: &configuration::Configuration, tr_dataset: &str, search_over_groups_data: models::SearchOverGroupsData) -> Result<models::SearchOverGroupsResponseTypes, Error<SearchOverGroupsError>> {
+pub async fn search_over_groups(configuration: &configuration::Configuration, params: SearchOverGroupsParams) -> Result<ResponseContent<SearchOverGroupsSuccess>, Error<SearchOverGroupsError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let search_over_groups_data = params.search_over_groups_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -670,7 +1078,9 @@ pub async fn search_over_groups(configuration: &configuration::Configuration, tr
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<SearchOverGroupsSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<SearchOverGroupsError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -679,8 +1089,13 @@ pub async fn search_over_groups(configuration: &configuration::Configuration, tr
 }
 
 /// Search Within Group  This route allows you to search only within a group. This is useful for when you only want search results to contain chunks which are members of a specific group. If choosing hybrid search, the results will be re-ranked using BAAI/bge-reranker-large.
-pub async fn search_within_group(configuration: &configuration::Configuration, tr_dataset: &str, search_within_group_data: models::SearchWithinGroupData) -> Result<models::SearchWithinGroupResponseTypes, Error<SearchWithinGroupError>> {
+pub async fn search_within_group(configuration: &configuration::Configuration, params: SearchWithinGroupParams) -> Result<ResponseContent<SearchWithinGroupSuccess>, Error<SearchWithinGroupError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let search_within_group_data = params.search_within_group_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -708,7 +1123,9 @@ pub async fn search_within_group(configuration: &configuration::Configuration, t
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<SearchWithinGroupSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<SearchWithinGroupError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -717,8 +1134,13 @@ pub async fn search_within_group(configuration: &configuration::Configuration, t
 }
 
 /// Update Group  Update a chunk_group. If you try to change the tracking_id to one that already exists, this operation will fail.
-pub async fn update_chunk_group(configuration: &configuration::Configuration, tr_dataset: &str, update_chunk_group_data: models::UpdateChunkGroupData) -> Result<(), Error<UpdateChunkGroupError>> {
+pub async fn update_chunk_group(configuration: &configuration::Configuration, params: UpdateChunkGroupParams) -> Result<ResponseContent<UpdateChunkGroupSuccess>, Error<UpdateChunkGroupError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let update_chunk_group_data = params.update_chunk_group_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -746,7 +1168,9 @@ pub async fn update_chunk_group(configuration: &configuration::Configuration, tr
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<UpdateChunkGroupSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<UpdateChunkGroupError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -755,8 +1179,14 @@ pub async fn update_chunk_group(configuration: &configuration::Configuration, tr
 }
 
 /// Update Group by Tracking ID  Update a chunk_group with the given tracking id.
-pub async fn update_group_by_tracking_id(configuration: &configuration::Configuration, tr_dataset: &str, tracking_id: &str, update_group_by_tracking_id_data: models::UpdateGroupByTrackingIdData) -> Result<(), Error<UpdateGroupByTrackingIdError>> {
+pub async fn update_group_by_tracking_id(configuration: &configuration::Configuration, params: UpdateGroupByTrackingIdParams) -> Result<ResponseContent<UpdateGroupByTrackingIdSuccess>, Error<UpdateGroupByTrackingIdError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let tracking_id = params.tracking_id;
+    let update_group_by_tracking_id_data = params.update_group_by_tracking_id_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -784,7 +1214,9 @@ pub async fn update_group_by_tracking_id(configuration: &configuration::Configur
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<UpdateGroupByTrackingIdSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<UpdateGroupByTrackingIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };

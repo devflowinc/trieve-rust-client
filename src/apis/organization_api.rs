@@ -14,6 +14,106 @@ use reqwest;
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
+/// struct for passing parameters to the method [`create_organization`]
+#[derive(Clone, Debug)]
+pub struct CreateOrganizationParams {
+    /// The organization data that you want to create
+    pub create_organization_data: models::CreateOrganizationData
+}
+
+/// struct for passing parameters to the method [`delete_organization_by_id`]
+#[derive(Clone, Debug)]
+pub struct DeleteOrganizationByIdParams {
+    /// The organization id to use for the request
+    pub tr_organization: String,
+    /// The id of the organization you want to fetch.
+    pub organization_id: String
+}
+
+/// struct for passing parameters to the method [`get_organization_by_id`]
+#[derive(Clone, Debug)]
+pub struct GetOrganizationByIdParams {
+    /// The organization id to use for the request
+    pub tr_organization: String,
+    /// The id of the organization you want to fetch.
+    pub organization_id: String
+}
+
+/// struct for passing parameters to the method [`get_organization_usage`]
+#[derive(Clone, Debug)]
+pub struct GetOrganizationUsageParams {
+    /// The organization id to use for the request
+    pub tr_organization: String,
+    /// The id of the organization you want to fetch the usage of.
+    pub organization_id: String
+}
+
+/// struct for passing parameters to the method [`get_organization_users`]
+#[derive(Clone, Debug)]
+pub struct GetOrganizationUsersParams {
+    /// The organization id to use for the request
+    pub tr_organization: String,
+    /// The id of the organization you want to fetch the users of.
+    pub organization_id: String
+}
+
+/// struct for passing parameters to the method [`update_organization`]
+#[derive(Clone, Debug)]
+pub struct UpdateOrganizationParams {
+    /// The organization id to use for the request
+    pub tr_organization: String,
+    /// The organization data that you want to update
+    pub update_organization_data: models::UpdateOrganizationData
+}
+
+
+/// struct for typed successes of method [`create_organization`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CreateOrganizationSuccess {
+    Status200(models::Organization),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`delete_organization_by_id`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum DeleteOrganizationByIdSuccess {
+    Status200(models::Organization),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_organization_by_id`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetOrganizationByIdSuccess {
+    Status200(models::Organization),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_organization_usage`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetOrganizationUsageSuccess {
+    Status200(models::OrganizationUsageCount),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_organization_users`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetOrganizationUsersSuccess {
+    Status200(Vec<models::SlimUser>),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`update_organization`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UpdateOrganizationSuccess {
+    Status200(models::Organization),
+    UnknownValue(serde_json::Value),
+}
 
 /// struct for typed errors of method [`create_organization`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -65,8 +165,12 @@ pub enum UpdateOrganizationError {
 
 
 /// Create Organization  Create a new organization. The auth'ed user who creates the organization will be the default owner of the organization.
-pub async fn create_organization(configuration: &configuration::Configuration, create_organization_data: models::CreateOrganizationData) -> Result<models::Organization, Error<CreateOrganizationError>> {
+pub async fn create_organization(configuration: &configuration::Configuration, params: CreateOrganizationParams) -> Result<ResponseContent<CreateOrganizationSuccess>, Error<CreateOrganizationError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let create_organization_data = params.create_organization_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -93,7 +197,9 @@ pub async fn create_organization(configuration: &configuration::Configuration, c
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<CreateOrganizationSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<CreateOrganizationError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -102,8 +208,13 @@ pub async fn create_organization(configuration: &configuration::Configuration, c
 }
 
 /// Delete Organization  Delete an organization by its id. The auth'ed user must be an owner of the organization to delete it.
-pub async fn delete_organization_by_id(configuration: &configuration::Configuration, tr_organization: &str, organization_id: &str) -> Result<models::Organization, Error<DeleteOrganizationByIdError>> {
+pub async fn delete_organization_by_id(configuration: &configuration::Configuration, params: DeleteOrganizationByIdParams) -> Result<ResponseContent<DeleteOrganizationByIdSuccess>, Error<DeleteOrganizationByIdError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_organization = params.tr_organization;
+    let organization_id = params.organization_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -130,7 +241,9 @@ pub async fn delete_organization_by_id(configuration: &configuration::Configurat
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<DeleteOrganizationByIdSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<DeleteOrganizationByIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -139,8 +252,13 @@ pub async fn delete_organization_by_id(configuration: &configuration::Configurat
 }
 
 /// Get Organization  Fetch the details of an organization by its id. The auth'ed user must be an admin or owner of the organization to fetch it.
-pub async fn get_organization_by_id(configuration: &configuration::Configuration, tr_organization: &str, organization_id: &str) -> Result<models::Organization, Error<GetOrganizationByIdError>> {
+pub async fn get_organization_by_id(configuration: &configuration::Configuration, params: GetOrganizationByIdParams) -> Result<ResponseContent<GetOrganizationByIdSuccess>, Error<GetOrganizationByIdError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_organization = params.tr_organization;
+    let organization_id = params.organization_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -167,7 +285,9 @@ pub async fn get_organization_by_id(configuration: &configuration::Configuration
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetOrganizationByIdSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetOrganizationByIdError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -176,8 +296,13 @@ pub async fn get_organization_by_id(configuration: &configuration::Configuration
 }
 
 /// Get Organization Usage  Fetch the current usage specification of an organization by its id. The auth'ed user must be an admin or owner of the organization to fetch it.
-pub async fn get_organization_usage(configuration: &configuration::Configuration, tr_organization: &str, organization_id: &str) -> Result<models::OrganizationUsageCount, Error<GetOrganizationUsageError>> {
+pub async fn get_organization_usage(configuration: &configuration::Configuration, params: GetOrganizationUsageParams) -> Result<ResponseContent<GetOrganizationUsageSuccess>, Error<GetOrganizationUsageError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_organization = params.tr_organization;
+    let organization_id = params.organization_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -204,7 +329,9 @@ pub async fn get_organization_usage(configuration: &configuration::Configuration
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetOrganizationUsageSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetOrganizationUsageError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -213,8 +340,13 @@ pub async fn get_organization_usage(configuration: &configuration::Configuration
 }
 
 /// Get Organization Users  Fetch the users of an organization by its id. The auth'ed user must be an admin or owner of the organization to fetch it.
-pub async fn get_organization_users(configuration: &configuration::Configuration, tr_organization: &str, organization_id: &str) -> Result<Vec<models::SlimUser>, Error<GetOrganizationUsersError>> {
+pub async fn get_organization_users(configuration: &configuration::Configuration, params: GetOrganizationUsersParams) -> Result<ResponseContent<GetOrganizationUsersSuccess>, Error<GetOrganizationUsersError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_organization = params.tr_organization;
+    let organization_id = params.organization_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -241,7 +373,9 @@ pub async fn get_organization_users(configuration: &configuration::Configuration
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetOrganizationUsersSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetOrganizationUsersError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -250,8 +384,13 @@ pub async fn get_organization_users(configuration: &configuration::Configuration
 }
 
 /// Update Organization  Update an organization. Only the owner of the organization can update it.
-pub async fn update_organization(configuration: &configuration::Configuration, tr_organization: &str, update_organization_data: models::UpdateOrganizationData) -> Result<models::Organization, Error<UpdateOrganizationError>> {
+pub async fn update_organization(configuration: &configuration::Configuration, params: UpdateOrganizationParams) -> Result<ResponseContent<UpdateOrganizationSuccess>, Error<UpdateOrganizationError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_organization = params.tr_organization;
+    let update_organization_data = params.update_organization_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -279,7 +418,9 @@ pub async fn update_organization(configuration: &configuration::Configuration, t
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<UpdateOrganizationSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<UpdateOrganizationError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };

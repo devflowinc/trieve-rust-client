@@ -13,13 +13,13 @@ use crate::models;
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum RecommendGroupChunkResponseTypes {
-    Array(Vec<models::GroupSlimChunksDto>),
-    Array(Vec<models::GroupScoreChunkDto>),
+    RecommendGroupSlimChunksDto(Vec<models::GroupSlimChunksDto>),
+    RecommendGroupChunksDto(Vec<models::GroupScoreChunkDto>),
 }
 
 impl Default for RecommendGroupChunkResponseTypes {
     fn default() -> Self {
-        Self::Array(Default::default())
+        Self::RecommendGroupSlimChunksDto(Default::default())
     }
 }
 

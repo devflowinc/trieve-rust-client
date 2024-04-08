@@ -14,6 +14,23 @@ use reqwest;
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
+/// struct for passing parameters to the method [`get_events`]
+#[derive(Clone, Debug)]
+pub struct GetEventsParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to get events for a dataset
+    pub get_events_data: models::GetEventsData
+}
+
+
+/// struct for typed successes of method [`get_events`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetEventsSuccess {
+    Status200(models::EventReturn),
+    UnknownValue(serde_json::Value),
+}
 
 /// struct for typed errors of method [`get_events`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -25,8 +42,13 @@ pub enum GetEventsError {
 
 
 /// Get events for the dataset  Get events for the dataset specified by the TR-Dataset header.
-pub async fn get_events(configuration: &configuration::Configuration, tr_dataset: &str, get_events_data: models::GetEventsData) -> Result<models::EventReturn, Error<GetEventsError>> {
+pub async fn get_events(configuration: &configuration::Configuration, params: GetEventsParams) -> Result<ResponseContent<GetEventsSuccess>, Error<GetEventsError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let get_events_data = params.get_events_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -54,7 +76,9 @@ pub async fn get_events(configuration: &configuration::Configuration, tr_dataset
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetEventsSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetEventsError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };

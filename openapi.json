@@ -35,12 +35,35 @@
         "operationId": "login",
         "parameters": [
           {
-            "name": "content",
+            "name": "organization_id",
             "in": "query",
-            "description": "Query parameters for login to be included as kv pairs after ? on the request URL.",
-            "required": true,
+            "description": "ID of organization to authenticate into",
+            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/AuthQuery"
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
+            }
+          },
+          {
+            "name": "redirect_uri",
+            "in": "query",
+            "description": "URL to redirect to after successful login",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "inv_code",
+            "in": "query",
+            "description": "Code sent via email as a result of successful call to send_invitation",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "nullable": true
             }
           }
         ],
@@ -5682,6 +5705,12 @@
           }
         }
       },
+      "RecommendChunkMetadata": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ChunkMetadata"
+        }
+      },
       "RecommendChunksRequest": {
         "type": "object",
         "properties": {
@@ -5744,115 +5773,40 @@
       "RecommendChunksResponseTypes": {
         "oneOf": [
           {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ChunkMetadata"
-            },
-            "example": [
-              {
-                "chunk_html": "<p>Hello, world!</p>",
-                "content": "Hello, world!",
-                "created_at": "2021-01-01T00:00:00",
-                "dataset_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-                "id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-                "link": "https://trieve.ai",
-                "metadata": {
-                  "key": "value"
-                },
-                "qdrant_point_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-                "tag_set": "tag1,tag2",
-                "time_stamp": "2021-01-01T00:00:00",
-                "tracking_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-                "updated_at": "2021-01-01T00:00:00",
-                "weight": 0.5
-              }
-            ]
+            "$ref": "#/components/schemas/RecommendChunkMetadata"
           },
           {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SlimChunkMetadata"
-            },
-            "example": [
-              {
-                "created_at": "2021-01-01T00:00:00",
-                "dataset_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-                "id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-                "link": "https://trieve.ai",
-                "metadata": {
-                  "key": "value"
-                },
-                "qdrant_point_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-                "tag_set": "tag1,tag2",
-                "time_stamp": "2021-01-01T00:00:00",
-                "tracking_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-                "updated_at": "2021-01-01T00:00:00",
-                "weight": 0.5
-              }
-            ]
+            "$ref": "#/components/schemas/RecommendSlimChunkMetadata"
           }
         ]
       },
       "RecommendGroupChunkResponseTypes": {
         "oneOf": [
           {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GroupSlimChunksDTO"
-            },
-            "example": [
-              {
-                "group_id": "e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-                "metadata": [
-                  {
-                    "metadata": [
-                      {
-                        "content": "This is a test content",
-                        "id": "e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-                        "link": "https://www.google.com",
-                        "metadata": {
-                          "key": "value"
-                        },
-                        "tag_set": "test",
-                        "time_stamp": "2021-01-01T00:00:00Z",
-                        "tracking_id": "e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-                        "weight": 1
-                      }
-                    ],
-                    "score": 0.5
-                  }
-                ]
-              }
-            ]
+            "$ref": "#/components/schemas/RecommendGroupSlimChunksDTO"
           },
           {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GroupScoreChunkDTO"
-            },
-            "example": {
-              "group_id": "e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-              "metadata": [
-                {
-                  "metadata": [
-                    {
-                      "id": "e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-                      "link": "https://www.google.com",
-                      "metadata": {
-                        "key": "value"
-                      },
-                      "tag_set": "test",
-                      "time_stamp": "2021-01-01T00:00:00Z",
-                      "tracking_id": "e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-                      "weight": 1
-                    }
-                  ],
-                  "score": 0.5
-                }
-              ]
-            }
+            "$ref": "#/components/schemas/RecommendGroupChunksDTO"
           }
         ]
+      },
+      "RecommendGroupChunksDTO": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/GroupScoreChunkDTO"
+        }
+      },
+      "RecommendGroupSlimChunksDTO": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/GroupSlimChunksDTO"
+        }
+      },
+      "RecommendSlimChunkMetadata": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SlimChunkMetadata"
+        }
       },
       "RegenerateMessageData": {
         "type": "object",

@@ -13,13 +13,13 @@ use crate::models;
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum RecommendChunksResponseTypes {
-    Array(Vec<models::ChunkMetadata>),
-    Array(Vec<models::SlimChunkMetadata>),
+    RecommendChunkMetadata(Vec<models::ChunkMetadata>),
+    RecommendSlimChunkMetadata(Vec<models::SlimChunkMetadata>),
 }
 
 impl Default for RecommendChunksResponseTypes {
     fn default() -> Self {
-        Self::Array(Default::default())
+        Self::RecommendChunkMetadata(Default::default())
     }
 }
 

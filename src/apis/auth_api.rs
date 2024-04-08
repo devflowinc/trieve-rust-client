@@ -14,6 +14,49 @@ use reqwest;
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
+/// struct for passing parameters to the method [`login`]
+#[derive(Clone, Debug)]
+pub struct LoginParams {
+    /// ID of organization to authenticate into
+    pub organization_id: Option<String>,
+    /// URL to redirect to after successful login
+    pub redirect_uri: Option<String>,
+    /// Code sent via email as a result of successful call to send_invitation
+    pub inv_code: Option<String>
+}
+
+
+/// struct for typed successes of method [`callback`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CallbackSuccess {
+    Status200(models::SlimUser),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_me`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetMeSuccess {
+    Status200(models::SlimUser),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`login`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum LoginSuccess {
+    Status303(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`logout`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum LogoutSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
 
 /// struct for typed errors of method [`callback`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -48,8 +91,11 @@ pub enum LogoutError {
 
 
 /// OpenID Connect callback  This is the callback route for the OAuth provider, it should not be called directly. Redirects to browser with set-cookie header.
-pub async fn callback(configuration: &configuration::Configuration, ) -> Result<models::SlimUser, Error<CallbackError>> {
+pub async fn callback(configuration: &configuration::Configuration) -> Result<ResponseContent<CallbackSuccess>, Error<CallbackError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -67,7 +113,9 @@ pub async fn callback(configuration: &configuration::Configuration, ) -> Result<
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<CallbackSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<CallbackError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -76,8 +124,11 @@ pub async fn callback(configuration: &configuration::Configuration, ) -> Result<
 }
 
 /// Get Me  Get the user corresponding to your current auth credentials.
-pub async fn get_me(configuration: &configuration::Configuration, ) -> Result<models::SlimUser, Error<GetMeError>> {
+pub async fn get_me(configuration: &configuration::Configuration) -> Result<ResponseContent<GetMeSuccess>, Error<GetMeError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -103,7 +154,9 @@ pub async fn get_me(configuration: &configuration::Configuration, ) -> Result<mo
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetMeSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetMeError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -112,15 +165,29 @@ pub async fn get_me(configuration: &configuration::Configuration, ) -> Result<mo
 }
 
 /// Login  This will redirect you to the OAuth provider for authentication with email/pass, SSO, Google, Github, etc.
-pub async fn login(configuration: &configuration::Configuration, content: models::AuthQuery) -> Result<(), Error<LoginError>> {
+pub async fn login(configuration: &configuration::Configuration, params: LoginParams) -> Result<ResponseContent<LoginSuccess>, Error<LoginError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let organization_id = params.organization_id;
+    let redirect_uri = params.redirect_uri;
+    let inv_code = params.inv_code;
+
 
     let local_var_client = &local_var_configuration.client;
 
     let local_var_uri_str = format!("{}/api/auth", local_var_configuration.base_path);
     let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
-    local_var_req_builder = local_var_req_builder.query(&[("content", &content.to_string())]);
+    if let Some(ref local_var_str) = organization_id {
+        local_var_req_builder = local_var_req_builder.query(&[("organization_id", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = redirect_uri {
+        local_var_req_builder = local_var_req_builder.query(&[("redirect_uri", &local_var_str.to_string())]);
+    }
+    if let Some(ref local_var_str) = inv_code {
+        local_var_req_builder = local_var_req_builder.query(&[("inv_code", &local_var_str.to_string())]);
+    }
     if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
         local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
     }
@@ -132,7 +199,9 @@ pub async fn login(configuration: &configuration::Configuration, content: models
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<LoginSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<LoginError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -141,8 +210,11 @@ pub async fn login(configuration: &configuration::Configuration, content: models
 }
 
 /// Logout  Invalidate your current auth credential stored typically stored in a cookie. This does not invalidate your API key.
-pub async fn logout(configuration: &configuration::Configuration, ) -> Result<(), Error<LogoutError>> {
+pub async fn logout(configuration: &configuration::Configuration) -> Result<ResponseContent<LogoutSuccess>, Error<LogoutError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -160,7 +232,9 @@ pub async fn logout(configuration: &configuration::Configuration, ) -> Result<()
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<LogoutSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<LogoutError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };

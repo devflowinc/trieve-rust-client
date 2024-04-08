@@ -14,6 +14,78 @@ use reqwest;
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
+/// struct for passing parameters to the method [`delete_file_handler`]
+#[derive(Clone, Debug)]
+pub struct DeleteFileHandlerParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// The id of the file to delete
+    pub file_id: String,
+    /// Whether or not to delete the chunks associated with the file
+    pub delete_chunks: bool
+}
+
+/// struct for passing parameters to the method [`get_dataset_files_handler`]
+#[derive(Clone, Debug)]
+pub struct GetDatasetFilesHandlerParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// The id of the dataset to fetch files for.
+    pub dataset_id: String,
+    /// The page number of files you wish to fetch. Each page contains at most 10 files.
+    pub page: i64
+}
+
+/// struct for passing parameters to the method [`get_file_handler`]
+#[derive(Clone, Debug)]
+pub struct GetFileHandlerParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// The id of the file to fetch
+    pub file_id: String
+}
+
+/// struct for passing parameters to the method [`upload_file_handler`]
+#[derive(Clone, Debug)]
+pub struct UploadFileHandlerParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to upload a file
+    pub upload_file_data: models::UploadFileData
+}
+
+
+/// struct for typed successes of method [`delete_file_handler`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum DeleteFileHandlerSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_dataset_files_handler`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetDatasetFilesHandlerSuccess {
+    Status200(Vec<models::File>),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_file_handler`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetFileHandlerSuccess {
+    Status200(models::FileDto),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`upload_file_handler`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UploadFileHandlerSuccess {
+    Status200(models::UploadFileResult),
+    UnknownValue(serde_json::Value),
+}
 
 /// struct for typed errors of method [`delete_file_handler`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -49,8 +121,14 @@ pub enum UploadFileHandlerError {
 
 
 /// Delete File  Delete a file from S3 attached to the server based on its id. This will disassociate chunks from the file, but only delete them all together if you specify delete_chunks to be true. Auth'ed user must be an admin or owner of the dataset's organization to delete a file.
-pub async fn delete_file_handler(configuration: &configuration::Configuration, tr_dataset: &str, file_id: &str, delete_chunks: bool) -> Result<(), Error<DeleteFileHandlerError>> {
+pub async fn delete_file_handler(configuration: &configuration::Configuration, params: DeleteFileHandlerParams) -> Result<ResponseContent<DeleteFileHandlerSuccess>, Error<DeleteFileHandlerError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let file_id = params.file_id;
+    let delete_chunks = params.delete_chunks;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -78,7 +156,9 @@ pub async fn delete_file_handler(configuration: &configuration::Configuration, t
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<DeleteFileHandlerSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<DeleteFileHandlerError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -87,8 +167,14 @@ pub async fn delete_file_handler(configuration: &configuration::Configuration, t
 }
 
 /// Get Files for Dataset  Get all files which belong to a given dataset specified by the dataset_id parameter. 10 files are returned per page.
-pub async fn get_dataset_files_handler(configuration: &configuration::Configuration, tr_dataset: &str, dataset_id: &str, page: i64) -> Result<Vec<models::File>, Error<GetDatasetFilesHandlerError>> {
+pub async fn get_dataset_files_handler(configuration: &configuration::Configuration, params: GetDatasetFilesHandlerParams) -> Result<ResponseContent<GetDatasetFilesHandlerSuccess>, Error<GetDatasetFilesHandlerError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let dataset_id = params.dataset_id;
+    let page = params.page;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -115,7 +201,9 @@ pub async fn get_dataset_files_handler(configuration: &configuration::Configurat
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetDatasetFilesHandlerSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetDatasetFilesHandlerError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -124,8 +212,13 @@ pub async fn get_dataset_files_handler(configuration: &configuration::Configurat
 }
 
 /// Get File  Download a file based on its id.
-pub async fn get_file_handler(configuration: &configuration::Configuration, tr_dataset: &str, file_id: &str) -> Result<models::FileDto, Error<GetFileHandlerError>> {
+pub async fn get_file_handler(configuration: &configuration::Configuration, params: GetFileHandlerParams) -> Result<ResponseContent<GetFileHandlerSuccess>, Error<GetFileHandlerError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let file_id = params.file_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -152,7 +245,9 @@ pub async fn get_file_handler(configuration: &configuration::Configuration, tr_d
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetFileHandlerSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetFileHandlerError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -161,8 +256,13 @@ pub async fn get_file_handler(configuration: &configuration::Configuration, tr_d
 }
 
 /// Upload File  Upload a file to S3 attached to the server. The file will be converted to HTML with tika and chunked algorithmically, images will be OCR'ed with tesseract. The resulting chunks will be indexed and searchable. Optionally, you can only upload the file and manually create chunks associated to the file after. See docs.trieve.ai and/or contact us for more details and tips. Auth'ed user must be an admin or owner of the dataset's organization to upload a file.
-pub async fn upload_file_handler(configuration: &configuration::Configuration, tr_dataset: &str, upload_file_data: models::UploadFileData) -> Result<models::UploadFileResult, Error<UploadFileHandlerError>> {
+pub async fn upload_file_handler(configuration: &configuration::Configuration, params: UploadFileHandlerParams) -> Result<ResponseContent<UploadFileHandlerSuccess>, Error<UploadFileHandlerError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let upload_file_data = params.upload_file_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -190,7 +290,9 @@ pub async fn upload_file_handler(configuration: &configuration::Configuration, t
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<UploadFileHandlerSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<UploadFileHandlerError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };

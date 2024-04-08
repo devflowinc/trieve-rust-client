@@ -14,6 +14,67 @@ use reqwest;
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
+/// struct for passing parameters to the method [`cancel_subscription`]
+#[derive(Clone, Debug)]
+pub struct CancelSubscriptionParams {
+    /// The organization id to use for the request
+    pub tr_organization: String,
+    /// id of the subscription you want to cancel
+    pub subscription_id: String
+}
+
+/// struct for passing parameters to the method [`direct_to_payment_link`]
+#[derive(Clone, Debug)]
+pub struct DirectToPaymentLinkParams {
+    /// id of the plan you want to subscribe to
+    pub plan_id: String,
+    /// id of the organization you want to subscribe to the plan
+    pub organization_id: String
+}
+
+/// struct for passing parameters to the method [`update_subscription_plan`]
+#[derive(Clone, Debug)]
+pub struct UpdateSubscriptionPlanParams {
+    /// The organization id to use for the request
+    pub tr_organization: String,
+    /// id of the subscription you want to update
+    pub subscription_id: String,
+    /// id of the plan you want to subscribe to
+    pub plan_id: String
+}
+
+
+/// struct for typed successes of method [`cancel_subscription`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CancelSubscriptionSuccess {
+    Status200(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`direct_to_payment_link`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum DirectToPaymentLinkSuccess {
+    Status303(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_all_plans`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetAllPlansSuccess {
+    Status200(Vec<models::StripePlan>),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`update_subscription_plan`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UpdateSubscriptionPlanSuccess {
+    Status200(),
+    UnknownValue(serde_json::Value),
+}
 
 /// struct for typed errors of method [`cancel_subscription`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -49,8 +110,13 @@ pub enum UpdateSubscriptionPlanError {
 
 
 /// Cancel Subscription  Cancel a subscription by its id
-pub async fn cancel_subscription(configuration: &configuration::Configuration, tr_organization: &str, subscription_id: &str) -> Result<(), Error<CancelSubscriptionError>> {
+pub async fn cancel_subscription(configuration: &configuration::Configuration, params: CancelSubscriptionParams) -> Result<ResponseContent<CancelSubscriptionSuccess>, Error<CancelSubscriptionError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_organization = params.tr_organization;
+    let subscription_id = params.subscription_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -77,7 +143,9 @@ pub async fn cancel_subscription(configuration: &configuration::Configuration, t
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<CancelSubscriptionSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<CancelSubscriptionError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -86,8 +154,13 @@ pub async fn cancel_subscription(configuration: &configuration::Configuration, t
 }
 
 /// Checkout  Get a direct link to the stripe checkout page for the plan and organization
-pub async fn direct_to_payment_link(configuration: &configuration::Configuration, plan_id: &str, organization_id: &str) -> Result<(), Error<DirectToPaymentLinkError>> {
+pub async fn direct_to_payment_link(configuration: &configuration::Configuration, params: DirectToPaymentLinkParams) -> Result<ResponseContent<DirectToPaymentLinkSuccess>, Error<DirectToPaymentLinkError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let plan_id = params.plan_id;
+    let organization_id = params.organization_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -105,7 +178,9 @@ pub async fn direct_to_payment_link(configuration: &configuration::Configuration
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<DirectToPaymentLinkSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<DirectToPaymentLinkError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -114,8 +189,11 @@ pub async fn direct_to_payment_link(configuration: &configuration::Configuration
 }
 
 /// Get All Plans  Get a list of all plans
-pub async fn get_all_plans(configuration: &configuration::Configuration, ) -> Result<Vec<models::StripePlan>, Error<GetAllPlansError>> {
+pub async fn get_all_plans(configuration: &configuration::Configuration) -> Result<ResponseContent<GetAllPlansSuccess>, Error<GetAllPlansError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -133,7 +211,9 @@ pub async fn get_all_plans(configuration: &configuration::Configuration, ) -> Re
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetAllPlansSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetAllPlansError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -142,8 +222,14 @@ pub async fn get_all_plans(configuration: &configuration::Configuration, ) -> Re
 }
 
 /// Update Subscription Plan  Update a subscription to a new plan
-pub async fn update_subscription_plan(configuration: &configuration::Configuration, tr_organization: &str, subscription_id: &str, plan_id: &str) -> Result<(), Error<UpdateSubscriptionPlanError>> {
+pub async fn update_subscription_plan(configuration: &configuration::Configuration, params: UpdateSubscriptionPlanParams) -> Result<ResponseContent<UpdateSubscriptionPlanSuccess>, Error<UpdateSubscriptionPlanError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_organization = params.tr_organization;
+    let subscription_id = params.subscription_id;
+    let plan_id = params.plan_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -170,7 +256,9 @@ pub async fn update_subscription_plan(configuration: &configuration::Configurati
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<UpdateSubscriptionPlanSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<UpdateSubscriptionPlanError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };

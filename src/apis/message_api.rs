@@ -14,6 +14,74 @@ use reqwest;
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
+/// struct for passing parameters to the method [`create_message_completion_handler`]
+#[derive(Clone, Debug)]
+pub struct CreateMessageCompletionHandlerParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to create a message completion
+    pub create_message_data: models::CreateMessageData
+}
+
+/// struct for passing parameters to the method [`edit_message_handler`]
+#[derive(Clone, Debug)]
+pub struct EditMessageHandlerParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to edit a message and get a new stream
+    pub edit_message_data: models::EditMessageData
+}
+
+/// struct for passing parameters to the method [`get_all_topic_messages`]
+#[derive(Clone, Debug)]
+pub struct GetAllTopicMessagesParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// The ID of the topic to get messages for.
+    pub messages_topic_id: String
+}
+
+/// struct for passing parameters to the method [`regenerate_message_handler`]
+#[derive(Clone, Debug)]
+pub struct RegenerateMessageHandlerParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to delete an agent message then regenerate it in a strem
+    pub regenerate_message_data: models::RegenerateMessageData
+}
+
+
+/// struct for typed successes of method [`create_message_completion_handler`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CreateMessageCompletionHandlerSuccess {
+    Status200(String),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`edit_message_handler`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum EditMessageHandlerSuccess {
+    Status200(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_all_topic_messages`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetAllTopicMessagesSuccess {
+    Status200(Vec<models::Message>),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`regenerate_message_handler`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum RegenerateMessageHandlerSuccess {
+    Status200(String),
+    UnknownValue(serde_json::Value),
+}
 
 /// struct for typed errors of method [`create_message_completion_handler`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -49,8 +117,13 @@ pub enum RegenerateMessageHandlerError {
 
 
 /// Create a message  Create a message. Messages are attached to topics in order to coordinate memory of gen-AI chat sessions. We are considering refactoring this resource of the API soon. Currently, you can only send user messages. If the topic is a RAG topic then the response will include Chunks first on the stream. The structure will look like `[chunks]||mesage`. See docs.trieve.ai for more information.
-pub async fn create_message_completion_handler(configuration: &configuration::Configuration, tr_dataset: &str, create_message_data: models::CreateMessageData) -> Result<String, Error<CreateMessageCompletionHandlerError>> {
+pub async fn create_message_completion_handler(configuration: &configuration::Configuration, params: CreateMessageCompletionHandlerParams) -> Result<ResponseContent<CreateMessageCompletionHandlerSuccess>, Error<CreateMessageCompletionHandlerError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let create_message_data = params.create_message_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -78,7 +151,9 @@ pub async fn create_message_completion_handler(configuration: &configuration::Co
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<CreateMessageCompletionHandlerSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<CreateMessageCompletionHandlerError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -87,8 +162,13 @@ pub async fn create_message_completion_handler(configuration: &configuration::Co
 }
 
 /// Edit a message  Edit a message which exists within the topic's chat history. This will delete the message and replace it with a new message. The new message will be generated by the AI based on the new content provided in the request body. The response will include Chunks first on the stream if the topic is using RAG. The structure will look like `[chunks]||mesage`. See docs.trieve.ai for more information.
-pub async fn edit_message_handler(configuration: &configuration::Configuration, tr_dataset: &str, edit_message_data: models::EditMessageData) -> Result<(), Error<EditMessageHandlerError>> {
+pub async fn edit_message_handler(configuration: &configuration::Configuration, params: EditMessageHandlerParams) -> Result<ResponseContent<EditMessageHandlerSuccess>, Error<EditMessageHandlerError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let edit_message_data = params.edit_message_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -116,7 +196,9 @@ pub async fn edit_message_handler(configuration: &configuration::Configuration, 
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<EditMessageHandlerSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<EditMessageHandlerError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -125,8 +207,13 @@ pub async fn edit_message_handler(configuration: &configuration::Configuration, 
 }
 
 /// Get all messages for a given topic  Get all messages for a given topic. If the topic is a RAG topic then the response will include Chunks first on each message. The structure will look like `[chunks]||mesage`. See docs.trieve.ai for more information.
-pub async fn get_all_topic_messages(configuration: &configuration::Configuration, tr_dataset: &str, messages_topic_id: &str) -> Result<Vec<models::Message>, Error<GetAllTopicMessagesError>> {
+pub async fn get_all_topic_messages(configuration: &configuration::Configuration, params: GetAllTopicMessagesParams) -> Result<ResponseContent<GetAllTopicMessagesSuccess>, Error<GetAllTopicMessagesError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let messages_topic_id = params.messages_topic_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -153,7 +240,9 @@ pub async fn get_all_topic_messages(configuration: &configuration::Configuration
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetAllTopicMessagesSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetAllTopicMessagesError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -162,8 +251,13 @@ pub async fn get_all_topic_messages(configuration: &configuration::Configuration
 }
 
 /// Regenerate message  Regenerate the assistant response to the last user message of a topic. This will delete the last message and replace it with a new message. The response will include Chunks first on the stream if the topic is using RAG. The structure will look like `[chunks]||mesage`. See docs.trieve.ai for more information.
-pub async fn regenerate_message_handler(configuration: &configuration::Configuration, tr_dataset: &str, regenerate_message_data: models::RegenerateMessageData) -> Result<String, Error<RegenerateMessageHandlerError>> {
+pub async fn regenerate_message_handler(configuration: &configuration::Configuration, params: RegenerateMessageHandlerParams) -> Result<ResponseContent<RegenerateMessageHandlerSuccess>, Error<RegenerateMessageHandlerError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let regenerate_message_data = params.regenerate_message_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -191,7 +285,9 @@ pub async fn regenerate_message_handler(configuration: &configuration::Configura
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<RegenerateMessageHandlerSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<RegenerateMessageHandlerError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };

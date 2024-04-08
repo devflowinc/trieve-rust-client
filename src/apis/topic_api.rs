@@ -14,6 +14,74 @@ use reqwest;
 use crate::{apis::ResponseContent, models};
 use super::{Error, configuration};
 
+/// struct for passing parameters to the method [`create_topic`]
+#[derive(Clone, Debug)]
+pub struct CreateTopicParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to create chat topic
+    pub create_topic_data: models::CreateTopicData
+}
+
+/// struct for passing parameters to the method [`delete_topic`]
+#[derive(Clone, Debug)]
+pub struct DeleteTopicParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// The id of the topic you want to delete.
+    pub topic_id: String
+}
+
+/// struct for passing parameters to the method [`get_all_topics_for_user`]
+#[derive(Clone, Debug)]
+pub struct GetAllTopicsForUserParams {
+    /// The id of the user to get topics for
+    pub user_id: String,
+    /// The dataset id to use for the request
+    pub tr_dataset: String
+}
+
+/// struct for passing parameters to the method [`update_topic`]
+#[derive(Clone, Debug)]
+pub struct UpdateTopicParams {
+    /// The dataset id to use for the request
+    pub tr_dataset: String,
+    /// JSON request payload to update a chat topic
+    pub update_topic_data: models::UpdateTopicData
+}
+
+
+/// struct for typed successes of method [`create_topic`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CreateTopicSuccess {
+    Status200(models::Topic),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`delete_topic`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum DeleteTopicSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`get_all_topics_for_user`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum GetAllTopicsForUserSuccess {
+    Status200(Vec<models::Topic>),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed successes of method [`update_topic`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum UpdateTopicSuccess {
+    Status204(),
+    UnknownValue(serde_json::Value),
+}
 
 /// struct for typed errors of method [`create_topic`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -49,8 +117,13 @@ pub enum UpdateTopicError {
 
 
 /// Create Topic  Create a new chat topic. Topics are attached to a user and act as a coordinator for memory of gen-AI chat sessions. We are considering refactoring this resource of the API soon.
-pub async fn create_topic(configuration: &configuration::Configuration, tr_dataset: &str, create_topic_data: models::CreateTopicData) -> Result<models::Topic, Error<CreateTopicError>> {
+pub async fn create_topic(configuration: &configuration::Configuration, params: CreateTopicParams) -> Result<ResponseContent<CreateTopicSuccess>, Error<CreateTopicError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let create_topic_data = params.create_topic_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -78,7 +151,9 @@ pub async fn create_topic(configuration: &configuration::Configuration, tr_datas
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<CreateTopicSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<CreateTopicError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -87,8 +162,13 @@ pub async fn create_topic(configuration: &configuration::Configuration, tr_datas
 }
 
 /// Delete Topic  Delete an existing chat topic. When a topic is deleted, all associated chat messages are also deleted.
-pub async fn delete_topic(configuration: &configuration::Configuration, tr_dataset: &str, topic_id: &str) -> Result<(), Error<DeleteTopicError>> {
+pub async fn delete_topic(configuration: &configuration::Configuration, params: DeleteTopicParams) -> Result<ResponseContent<DeleteTopicSuccess>, Error<DeleteTopicError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let topic_id = params.topic_id;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -115,7 +195,9 @@ pub async fn delete_topic(configuration: &configuration::Configuration, tr_datas
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<DeleteTopicSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<DeleteTopicError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -124,8 +206,13 @@ pub async fn delete_topic(configuration: &configuration::Configuration, tr_datas
 }
 
 /// Get All Topics for User  Get all topics belonging to a the auth'ed user. Soon, we plan to allow specification of the user for this route and include pagination.
-pub async fn get_all_topics_for_user(configuration: &configuration::Configuration, user_id: &str, tr_dataset: &str) -> Result<Vec<models::Topic>, Error<GetAllTopicsForUserError>> {
+pub async fn get_all_topics_for_user(configuration: &configuration::Configuration, params: GetAllTopicsForUserParams) -> Result<ResponseContent<GetAllTopicsForUserSuccess>, Error<GetAllTopicsForUserError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let user_id = params.user_id;
+    let tr_dataset = params.tr_dataset;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -152,7 +239,9 @@ pub async fn get_all_topics_for_user(configuration: &configuration::Configuratio
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        serde_json::from_str(&local_var_content).map_err(Error::from)
+        let local_var_entity: Option<GetAllTopicsForUserSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<GetAllTopicsForUserError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
@@ -161,8 +250,13 @@ pub async fn get_all_topics_for_user(configuration: &configuration::Configuratio
 }
 
 /// Update Topic  Update an existing chat topic. Currently, only the name of the topic can be updated.
-pub async fn update_topic(configuration: &configuration::Configuration, tr_dataset: &str, update_topic_data: models::UpdateTopicData) -> Result<(), Error<UpdateTopicError>> {
+pub async fn update_topic(configuration: &configuration::Configuration, params: UpdateTopicParams) -> Result<ResponseContent<UpdateTopicSuccess>, Error<UpdateTopicError>> {
     let local_var_configuration = configuration;
+
+    // unbox the parameters
+    let tr_dataset = params.tr_dataset;
+    let update_topic_data = params.update_topic_data;
+
 
     let local_var_client = &local_var_configuration.client;
 
@@ -190,7 +284,9 @@ pub async fn update_topic(configuration: &configuration::Configuration, tr_datas
     let local_var_content = local_var_resp.text().await?;
 
     if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
-        Ok(())
+        let local_var_entity: Option<UpdateTopicSuccess> = serde_json::from_str(&local_var_content).ok();
+        let local_var_result = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+        Ok(local_var_result)
     } else {
         let local_var_entity: Option<UpdateTopicError> = serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };

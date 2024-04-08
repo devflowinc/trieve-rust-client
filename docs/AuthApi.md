@@ -67,7 +67,7 @@ This endpoint does not need any parameter.
 
 ## login
 
-> login(content)
+> login(organization_id, redirect_uri, inv_code)
 Login
 
 Login  This will redirect you to the OAuth provider for authentication with email/pass, SSO, Google, Github, etc.
@@ -77,7 +77,9 @@ Login  This will redirect you to the OAuth provider for authentication with emai
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**content** | [**AuthQuery**](.md) | Query parameters for login to be included as kv pairs after ? on the request URL. | [required] |
+**organization_id** | Option<**uuid::Uuid**> | ID of organization to authenticate into |  |
+**redirect_uri** | Option<**String**> | URL to redirect to after successful login |  |
+**inv_code** | Option<**uuid::Uuid**> | Code sent via email as a result of successful call to send_invitation |  |
 
 ### Return type
 
