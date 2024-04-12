@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**chunks** | [**Vec<models::ChunkMetadataWithFileData>**](ChunkMetadataWithFileData.md) |  | 
+**chunks** | [**Vec<models::ChunkMetadata>**](ChunkMetadata.md) |  | 
 **group** | [**models::ChunkGroup**](ChunkGroup.md) |  | 
 **total_pages** | **i64** |  | 
 

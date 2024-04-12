@@ -12,7 +12,7 @@
       "name": "BSL",
       "url": "https://github.com/devflowinc/trieve/blob/main/LICENSE.txt"
     },
-    "version": "0.5.8"
+    "version": "0.6.5"
   },
   "servers": [
     {
@@ -445,11 +445,27 @@
         },
         "responses": {
           "200": {
-            "description": "Chunks with embedding vectors which are similar to those in the request body",
+            "description": "Chunks with embedding vectors which are similar to positives and dissimilar to negatives if slim_chunks is false in the request",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RecommendChunksResponseTypes"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChunkMetadataWithScore"
+                  }
+                }
+              }
+            }
+          },
+          "206": {
+            "description": "Chunks with embedding vectors which are similar to positives and dissimilar to negatives if slim_chunks is true in the request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SlimChunkMetadataWithScore"
+                  }
                 }
               }
             }
@@ -506,11 +522,21 @@
         },
         "responses": {
           "200": {
-            "description": "Chunks with embedding vectors which are similar to those in the request body",
+            "description": "Chunks with embedding vectors which are similar to those in the request body if slim_chunks is false or not specified in the request body",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchChunkResponseTypes"
+                  "$ref": "#/components/schemas/SearchChunkQueryResponseBody"
+                }
+              }
+            }
+          },
+          "206": {
+            "description": "Chunks with embedding vectors which are similar to those in the request body if slim_chunks is true in the request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchSlimChunkQueryResponseBody"
                 }
               }
             }
@@ -580,6 +606,7 @@
             }
           }
         },
+        "deprecated": true,
         "security": [
           {
             "ApiKey": [
@@ -1144,17 +1171,27 @@
         },
         "responses": {
           "200": {
-            "description": "Group chunks which are similar to the embedding vector of the search query",
+            "description": "Group chunks which are similar to the embedding vector of the search query if slim_chunks is false or unspecified in the request body",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchOverGroupsResponseTypes"
+                  "$ref": "#/components/schemas/SearchOverGroupsResults"
+                }
+              }
+            }
+          },
+          "206": {
+            "description": "Group chunks which are similar to the embedding vector of the search query if slim_chunks is true in the request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchOverGroupsSlimResults"
                 }
               }
             }
           },
           "400": {
-            "description": "Service error relating to getting the groups that the chunk is in",
+            "description": "Service error relating to searching over groups",
             "content": {
               "application/json": {
                 "schema": {
@@ -1197,7 +1234,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReccomendGroupChunksRequest"
+                "$ref": "#/components/schemas/RecommendGroupChunksRequest"
               }
             }
           },
@@ -1205,11 +1242,27 @@
         },
         "responses": {
           "200": {
-            "description": "JSON body representing the groups which are similar to the groups in the request",
+            "description": "JSON body representing the groups which are similar to the positive groups and dissimilar to the negative ones if slim_chunks is false in the request",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RecommendGroupChunkResponseTypes"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GroupScoreChunk"
+                  }
+                }
+              }
+            }
+          },
+          "206": {
+            "description": "JSON body representing the groups which are similar to the positive groups and dissimilar to the negative ones if slim_chunks is false in the request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GroupScoreSlimChunks"
+                  }
                 }
               }
             }
@@ -1266,11 +1319,21 @@
         },
         "responses": {
           "200": {
-            "description": "Group chunks which are similar to the embedding vector of the search query",
+            "description": "Group chunks which are similar to the embedding vector of the search query if slim_chunks is false in the request",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchWithinGroupResponseTypes"
+                  "$ref": "#/components/schemas/SearchWithinGroupResults"
+                }
+              }
+            }
+          },
+          "206": {
+            "description": "Group chunks which are similar to the embedding vector of the search query if slim_chunks is true in the request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchWithinGroupSlimResults"
                 }
               }
             }
@@ -1476,6 +1539,7 @@
             }
           }
         },
+        "deprecated": true,
         "security": [
           {
             "ApiKey": [
@@ -1538,6 +1602,7 @@
             }
           }
         },
+        "deprecated": true,
         "security": [
           {
             "ApiKey": [
@@ -3669,7 +3734,57 @@
         ]
       }
     },
-    "/api/user/delete_api_key/{api_key_id}": {
+    "/api/user/api_key": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Set User Api Key",
+        "description": "Set User Api Key\n\nCreate a new api key for the auth'ed user. Successful response will contain the newly created api key. If a write role is assigned the api key will have permission level of the auth'ed user who calls this endpoint.",
+        "operationId": "set_user_api_key",
+        "requestBody": {
+          "description": "JSON request payload to create a new user api key",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetUserApiKeyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "JSON body representing the api_key for the user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetUserApiKeyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Service error relating to creating api_key for the user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseBody"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": [
+              "readonly"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/user/api_key/{api_key_id}": {
       "delete": {
         "tags": [
           "user"
@@ -3722,70 +3837,23 @@
           }
         ]
       }
-    },
-    "/api/user/set_api_key": {
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Set User Api Key",
-        "description": "Set User Api Key\n\nCreate a new api key for the auth'ed user. Successful response will contain the newly created api key. If a write role is assigned the api key will have permission level of the auth'ed user who calls this endpoint.",
-        "operationId": "set_user_api_key",
-        "requestBody": {
-          "description": "JSON request payload to create a new user api key",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SetUserApiKeyRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "JSON body representing the api_key for the user",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SetUserApiKeyResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Service error relating to creating api_key for the user",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponseBody"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "ApiKey": [
-              "readonly"
-            ]
-          }
-        ]
-      }
     }
   },
   "components": {
     "schemas": {
       "AddChunkToGroupData": {
         "type": "object",
-        "required": [
-          "chunk_id"
-        ],
         "properties": {
           "chunk_id": {
             "type": "string",
             "format": "uuid",
-            "description": "Id of the chunk to make a member of the group."
+            "description": "Id of the chunk to make a member of the group.",
+            "nullable": true
+          },
+          "tracking_id": {
+            "type": "string",
+            "description": "Tracking Id of the chunk to make a member of the group.",
+            "nullable": true
           }
         }
       },
@@ -3938,7 +4006,7 @@
           "chunks": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ChunkMetadataWithFileData"
+              "$ref": "#/components/schemas/ChunkMetadata"
             }
           },
           "group": {
@@ -4204,8 +4272,15 @@
             "type": "string",
             "format": "uuid"
           },
+          "metadata": {
+            "nullable": true
+          },
           "name": {
             "type": "string"
+          },
+          "tag_set": {
+            "type": "string",
+            "nullable": true
           },
           "tracking_id": {
             "type": "string",
@@ -4361,15 +4436,16 @@
           "weight": 0.5
         }
       },
-      "ChunkMetadataWithFileData": {
+      "ChunkMetadataWithScore": {
         "type": "object",
         "required": [
           "id",
           "content",
-          "qdrant_point_id",
           "created_at",
           "updated_at",
-          "weight"
+          "dataset_id",
+          "weight",
+          "score"
         ],
         "properties": {
           "chunk_html": {
@@ -4383,14 +4459,9 @@
             "type": "string",
             "format": "date-time"
           },
-          "file_id": {
+          "dataset_id": {
             "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "file_name": {
-            "type": "string",
-            "nullable": true
+            "format": "uuid"
           },
           "id": {
             "type": "string",
@@ -4405,7 +4476,12 @@
           },
           "qdrant_point_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
+          },
+          "score": {
+            "type": "number",
+            "format": "float"
           },
           "tag_set": {
             "type": "string",
@@ -4433,14 +4509,14 @@
           "chunk_html": "<p>Hello, world!</p>",
           "content": "Hello, world!",
           "created_at": "2021-01-01T00:00:00",
-          "file_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
-          "file_name": "file.txt",
+          "dataset_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
           "id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
           "link": "https://trieve.ai",
           "metadata": {
             "key": "value"
           },
           "qdrant_point_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
+          "score": 0.9,
           "tag_set": "tag1,tag2",
           "time_stamp": "2021-01-01T00:00:00",
           "tracking_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
@@ -4591,17 +4667,29 @@
       "CreateChunkGroupData": {
         "type": "object",
         "required": [
-          "name",
-          "description"
+          "name"
         ],
         "properties": {
           "description": {
             "type": "string",
-            "description": "Description to assign to the chunk_group. Convenience field for you to avoid having to remember what the group is for."
+            "description": "Description to assign to the chunk_group. Convenience field for you to avoid having to remember what the group is for.",
+            "nullable": true
+          },
+          "metadata": {
+            "description": "Optional metadata to assign to the chunk_group. This is a JSON object that can store any additional information you want to associate with the chunks inside of the chunk_group.",
+            "nullable": true
           },
           "name": {
             "type": "string",
             "description": "Name to assign to the chunk_group. Does not need to be unique."
+          },
+          "tag_set": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional tags to assign to the chunk_group. This is a list of strings that can be used to categorize the chunks inside the chunk_group.",
+            "nullable": true
           },
           "tracking_id": {
             "type": "string",
@@ -5240,7 +5328,7 @@
             "items": {
               "type": "string"
             },
-            "description": "The types of events to get. Any combination of file_uploaded, card_uploaded, card_action_failed, or card_updated. Leave undefined to get all events.",
+            "description": "The types of events to get. Any combination of file_uploaded, chunk_uploaded, chunk_action_failed, or chunk_updated. Leave undefined to get all events.",
             "nullable": true
           },
           "page": {
@@ -5260,7 +5348,7 @@
           "page": 1,
           "page_size": 10,
           "type": [
-            "card_action_failed"
+            "chunk_action_failed"
           ]
         }
       },
@@ -5298,7 +5386,7 @@
           }
         }
       },
-      "GroupScoreChunkDTO": {
+      "GroupScoreChunk": {
         "type": "object",
         "required": [
           "group_id",
@@ -5308,6 +5396,10 @@
           "group_id": {
             "type": "string",
             "format": "uuid"
+          },
+          "group_name": {
+            "type": "string",
+            "nullable": true
           },
           "group_tracking_id": {
             "type": "string",
@@ -5343,7 +5435,7 @@
           ]
         }
       },
-      "GroupSlimChunksDTO": {
+      "GroupScoreSlimChunks": {
         "type": "object",
         "required": [
           "group_id",
@@ -5639,7 +5731,71 @@
           }
         ]
       },
-      "ReccomendGroupChunksRequest": {
+      "RecommendChunksRequest": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ChunkFilter"
+              }
+            ],
+            "nullable": true
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The number of chunks to return. This is the number of chunks which will be returned in the response. The default is 10.",
+            "nullable": true,
+            "minimum": 0
+          },
+          "negative_chunk_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The ids of the chunks to be used as negative examples for the recommendation. The chunks in this array will be used to filter out similar chunks.",
+            "nullable": true
+          },
+          "negative_tracking_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The tracking_ids of the chunks to be used as negative examples for the recommendation. The chunks in this array will be used to filter out similar chunks.",
+            "nullable": true
+          },
+          "positive_chunk_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The ids of the chunks to be used as positive examples for the recommendation. The chunks in this array will be used to find similar chunks.",
+            "nullable": true
+          },
+          "positive_tracking_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The tracking_ids of the chunks to be used as positive examples for the recommendation. The chunks in this array will be used to find similar chunks.",
+            "nullable": true
+          },
+          "slim_chunks": {
+            "type": "boolean",
+            "description": "Set slim_chunks to true to avoid returning the content and chunk_html of the chunks. This is useful for when you want to reduce amount of data over the wire for latency improvement. Default is false.",
+            "nullable": true
+          },
+          "strategy": {
+            "type": "string",
+            "description": "Strategy to use for recommendations, either \"average_vector\" or \"best_score\". The default is \"average_vector\". The \"average_vector\" strategy will construct a single average vector from the positive and negative samples then use it to perform a pseudo-search. The \"best_score\" strategy is more advanced and navigates the HNSW with a heuristic of picking edges where the point is closer to the positive samples than it is the negatives.",
+            "nullable": true
+          }
+        }
+      },
+      "RecommendGroupChunksRequest": {
         "type": "object",
         "properties": {
           "filters": {
@@ -5702,110 +5858,12 @@
             "type": "boolean",
             "description": "Set slim_chunks to true to avoid returning the content and chunk_html of the chunks. This is useful for when you want to reduce amount of data over the wire for latency improvement. Default is false.",
             "nullable": true
-          }
-        }
-      },
-      "RecommendChunkMetadata": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ChunkMetadata"
-        }
-      },
-      "RecommendChunksRequest": {
-        "type": "object",
-        "properties": {
-          "filters": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ChunkFilter"
-              }
-            ],
-            "nullable": true
           },
-          "limit": {
-            "type": "integer",
-            "format": "int64",
-            "description": "The number of chunks to return. This is the number of chunks which will be returned in the response. The default is 10.",
-            "nullable": true,
-            "minimum": 0
-          },
-          "negative_chunk_ids": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "description": "The ids of the chunks to be used as negative examples for the recommendation. The chunks in this array will be used to filter out similar chunks.",
-            "nullable": true
-          },
-          "negative_tracking_ids": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "The tracking_ids of the chunks to be used as negative examples for the recommendation. The chunks in this array will be used to filter out similar chunks.",
-            "nullable": true
-          },
-          "positive_chunk_ids": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "description": "The ids of the chunks to be used as positive examples for the recommendation. The chunks in this array will be used to find similar chunks.",
-            "nullable": true
-          },
-          "positive_tracking_ids": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "The tracking_ids of the chunks to be used as positive examples for the recommendation. The chunks in this array will be used to find similar chunks.",
-            "nullable": true
-          },
-          "slim_chunks": {
-            "type": "boolean",
-            "description": "Set slim_chunks to true to avoid returning the content and chunk_html of the chunks. This is useful for when you want to reduce amount of data over the wire for latency improvement. Default is false.",
+          "strategy": {
+            "type": "string",
+            "description": "Strategy to use for recommendations, either \"average_vector\" or \"best_score\". The default is \"average_vector\". The \"average_vector\" strategy will construct a single average vector from the positive and negative samples then use it to perform a pseudo-search. The \"best_score\" strategy is more advanced and navigates the HNSW with a heuristic of picking edges where the point is closer to the positive samples than it is the negatives.",
             "nullable": true
           }
-        }
-      },
-      "RecommendChunksResponseTypes": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/RecommendChunkMetadata"
-          },
-          {
-            "$ref": "#/components/schemas/RecommendSlimChunkMetadata"
-          }
-        ]
-      },
-      "RecommendGroupChunkResponseTypes": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/RecommendGroupSlimChunksDTO"
-          },
-          {
-            "$ref": "#/components/schemas/RecommendGroupChunksDTO"
-          }
-        ]
-      },
-      "RecommendGroupChunksDTO": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GroupScoreChunkDTO"
-        }
-      },
-      "RecommendGroupSlimChunksDTO": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GroupSlimChunksDTO"
-        }
-      },
-      "RecommendSlimChunkMetadata": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SlimChunkMetadata"
         }
       },
       "RegenerateMessageData": {
@@ -5864,7 +5922,7 @@
           "metadata": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ChunkMetadataWithFileData"
+              "$ref": "#/components/schemas/ChunkMetadata"
             }
           },
           "score": {
@@ -6089,62 +6147,6 @@
           }
         }
       },
-      "SearchChunkResponseTypes": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/SearchSlimChunkQueryResponseBody"
-          },
-          {
-            "$ref": "#/components/schemas/SearchChunkQueryResponseBody"
-          }
-        ]
-      },
-      "SearchGroupSlimChunksResult": {
-        "type": "object",
-        "required": [
-          "bookmarks",
-          "group",
-          "total_pages"
-        ],
-        "properties": {
-          "bookmarks": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ScoreSlimChunks"
-            }
-          },
-          "group": {
-            "$ref": "#/components/schemas/ChunkGroup"
-          },
-          "total_pages": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
-      "SearchGroupsResult": {
-        "type": "object",
-        "required": [
-          "bookmarks",
-          "group",
-          "total_pages"
-        ],
-        "properties": {
-          "bookmarks": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ScoreChunkDTO"
-            }
-          },
-          "group": {
-            "$ref": "#/components/schemas/ChunkGroup"
-          },
-          "total_pages": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
       "SearchOverGroupsData": {
         "type": "object",
         "required": [
@@ -6220,7 +6222,7 @@
           }
         }
       },
-      "SearchOverGroupsResponseBody": {
+      "SearchOverGroupsResults": {
         "type": "object",
         "required": [
           "group_chunks",
@@ -6230,7 +6232,7 @@
           "group_chunks": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GroupScoreChunkDTO"
+              "$ref": "#/components/schemas/GroupScoreChunk"
             }
           },
           "total_chunk_pages": {
@@ -6239,17 +6241,7 @@
           }
         }
       },
-      "SearchOverGroupsResponseTypes": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/SearchOverGroupsResponseBody"
-          },
-          {
-            "$ref": "#/components/schemas/SearchOverGroupsSlimChunksResponseBody"
-          }
-        ]
-      },
-      "SearchOverGroupsSlimChunksResponseBody": {
+      "SearchOverGroupsSlimResults": {
         "type": "object",
         "required": [
           "group_chunks",
@@ -6259,7 +6251,7 @@
           "group_chunks": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GroupSlimChunksDTO"
+              "$ref": "#/components/schemas/GroupScoreSlimChunks"
             }
           },
           "total_chunk_pages": {
@@ -6371,15 +6363,51 @@
           }
         }
       },
-      "SearchWithinGroupResponseTypes": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/SearchGroupsResult"
+      "SearchWithinGroupResults": {
+        "type": "object",
+        "required": [
+          "bookmarks",
+          "group",
+          "total_pages"
+        ],
+        "properties": {
+          "bookmarks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScoreChunkDTO"
+            }
           },
-          {
-            "$ref": "#/components/schemas/SearchGroupSlimChunksResult"
+          "group": {
+            "$ref": "#/components/schemas/ChunkGroup"
+          },
+          "total_pages": {
+            "type": "integer",
+            "format": "int64"
           }
-        ]
+        }
+      },
+      "SearchWithinGroupSlimResults": {
+        "type": "object",
+        "required": [
+          "bookmarks",
+          "group",
+          "total_pages"
+        ],
+        "properties": {
+          "bookmarks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScoreSlimChunks"
+            }
+          },
+          "group": {
+            "$ref": "#/components/schemas/ChunkGroup"
+          },
+          "total_pages": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
       },
       "SetUserApiKeyRequest": {
         "type": "object",
@@ -6514,6 +6542,79 @@
             "key": "value"
           },
           "qdrant_point_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
+          "tag_set": "tag1,tag2",
+          "time_stamp": "2021-01-01T00:00:00",
+          "tracking_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
+          "updated_at": "2021-01-01T00:00:00",
+          "weight": 0.5
+        }
+      },
+      "SlimChunkMetadataWithScore": {
+        "type": "object",
+        "required": [
+          "id",
+          "created_at",
+          "updated_at",
+          "weight",
+          "score"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "link": {
+            "type": "string",
+            "nullable": true
+          },
+          "metadata": {
+            "nullable": true
+          },
+          "qdrant_point_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "score": {
+            "type": "number",
+            "format": "float"
+          },
+          "tag_set": {
+            "type": "string",
+            "nullable": true
+          },
+          "time_stamp": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "tracking_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "weight": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "example": {
+          "created_at": "2021-01-01T00:00:00",
+          "dataset_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
+          "id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
+          "link": "https://trieve.ai",
+          "metadata": {
+            "key": "value"
+          },
+          "qdrant_point_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
+          "score": 0.9,
           "tag_set": "tag1,tag2",
           "time_stamp": "2021-01-01T00:00:00",
           "tracking_id": "e3e3e3e3-e3e3-e3e3-e3e3-e3e3e3e3e3e3",
@@ -6906,9 +7007,21 @@
             "description": "Id of the chunk_group to update.",
             "nullable": true
           },
+          "metadata": {
+            "description": "Optional metadata to assign to the chunk_group. This is a JSON object that can store any additional information you want to associate with the chunks inside of the chunk_group.",
+            "nullable": true
+          },
           "name": {
             "type": "string",
             "description": "Name to assign to the chunk_group. Does not need to be unique. If not provided, the name will not be updated.",
+            "nullable": true
+          },
+          "tag_set": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional tags to assign to the chunk_group. This is a list of strings that can be used to categorize the chunks inside the chunk_group.",
             "nullable": true
           },
           "tracking_id": {
@@ -6961,9 +7074,21 @@
             "description": "Description to assign to the chunk_group. Convenience field for you to avoid having to remember what the group is for. If not provided, the description will not be updated.",
             "nullable": true
           },
+          "metadata": {
+            "description": "Optional metadata to assign to the chunk_group. This is a JSON object that can store any additional information you want to associate with the chunks inside of the chunk_group.",
+            "nullable": true
+          },
           "name": {
             "type": "string",
             "description": "Name to assign to the chunk_group. Does not need to be unique. If not provided, the name will not be updated.",
+            "nullable": true
+          },
+          "tag_set": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional tags to assign to the chunk_group. This is a list of strings that can be used to categorize the chunks inside the chunk_group.",
             "nullable": true
           },
           "tracking_id": {
@@ -7042,8 +7167,7 @@
         "type": "object",
         "required": [
           "base64_file",
-          "file_name",
-          "file_mime_type"
+          "file_name"
         ],
         "properties": {
           "base64_file": {
@@ -7060,13 +7184,14 @@
             "description": "Description is an optional convience field so you do not have to remember what the file contains or is about. It will be included on the group resulting from the file which will hold its chunk.",
             "nullable": true
           },
-          "file_mime_type": {
-            "type": "string",
-            "description": "MIME type of the file being uploaded."
-          },
           "file_name": {
             "type": "string",
             "description": "Name of the file being uploaded, including the extension."
+          },
+          "group_tracking_id": {
+            "type": "string",
+            "description": "Group tracking id is an optional field which allows you to specify the tracking id of the group that is created from the file. Chunks created will be created with the tracking id of `group_tracking_id|<index of chunk>`",
+            "nullable": true
           },
           "link": {
             "type": "string",

@@ -237,7 +237,7 @@ Name | Type | Description  | Required | Notes
 
 ## get_recommended_chunks
 
-> models::RecommendChunksResponseTypes get_recommended_chunks(tr_dataset, recommend_chunks_request)
+> Vec<models::ChunkMetadataWithScore> get_recommended_chunks(tr_dataset, recommend_chunks_request)
 Get Recommended Chunks
 
 Get Recommended Chunks  Get recommendations of chunks similar to the chunks in the request. Think about this as a feature similar to the \"add to playlist\" recommendation feature on Spotify. This request pairs especially well with our groups endpoint.
@@ -252,7 +252,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::RecommendChunksResponseTypes**](RecommendChunksResponseTypes.md)
+[**Vec<models::ChunkMetadataWithScore>**](ChunkMetadataWithScore.md)
 
 ### Authorization
 
@@ -268,7 +268,7 @@ Name | Type | Description  | Required | Notes
 
 ## search_chunk
 
-> models::SearchChunkResponseTypes search_chunk(tr_dataset, search_chunk_data)
+> models::SearchChunkQueryResponseBody search_chunk(tr_dataset, search_chunk_data)
 Search
 
 Search  This route provides the primary search functionality for the API. It can be used to search for chunks by semantic similarity, full-text similarity, or a combination of both. Results' `chunk_html` values will be modified with `<b>` tags for sub-sentence highlighting.
@@ -283,7 +283,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::SearchChunkResponseTypes**](SearchChunkResponseTypes.md)
+[**models::SearchChunkQueryResponseBody**](SearchChunkQueryResponseBody.md)
 
 ### Authorization
 

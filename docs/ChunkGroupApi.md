@@ -341,7 +341,7 @@ Name | Type | Description  | Required | Notes
 
 ## get_recommended_groups
 
-> models::RecommendGroupChunkResponseTypes get_recommended_groups(tr_dataset, reccomend_group_chunks_request)
+> Vec<models::GroupScoreChunk> get_recommended_groups(tr_dataset, recommend_group_chunks_request)
 Get Recommended Groups
 
 Get Recommended Groups  Route to get recommended groups. This route will return groups which are similar to the groups in the request body.
@@ -352,11 +352,11 @@ Get Recommended Groups  Route to get recommended groups. This route will return 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **tr_dataset** | **String** | The dataset id to use for the request | [required] |
-**reccomend_group_chunks_request** | [**ReccomendGroupChunksRequest**](ReccomendGroupChunksRequest.md) | JSON request payload to get recommendations of chunks similar to the chunks in the request | [required] |
+**recommend_group_chunks_request** | [**RecommendGroupChunksRequest**](RecommendGroupChunksRequest.md) | JSON request payload to get recommendations of chunks similar to the chunks in the request | [required] |
 
 ### Return type
 
-[**models::RecommendGroupChunkResponseTypes**](RecommendGroupChunkResponseTypes.md)
+[**Vec<models::GroupScoreChunk>**](GroupScoreChunk.md)
 
 ### Authorization
 
@@ -436,7 +436,7 @@ Name | Type | Description  | Required | Notes
 
 ## search_over_groups
 
-> models::SearchOverGroupsResponseTypes search_over_groups(tr_dataset, search_over_groups_data)
+> models::SearchOverGroupsResults search_over_groups(tr_dataset, search_over_groups_data)
 Search Over Groups
 
 Search Over Groups  This route allows you to get groups as results instead of chunks. Each group returned will have the matching chunks sorted by similarity within the group. This is useful for when you want to get groups of chunks which are similar to the search query. If choosing hybrid search, the results will be re-ranked using BAAI/bge-reranker-large. Compatible with semantic, fulltext, or hybrid search modes.
@@ -451,7 +451,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::SearchOverGroupsResponseTypes**](SearchOverGroupsResponseTypes.md)
+[**models::SearchOverGroupsResults**](SearchOverGroupsResults.md)
 
 ### Authorization
 
@@ -467,7 +467,7 @@ Name | Type | Description  | Required | Notes
 
 ## search_within_group
 
-> models::SearchWithinGroupResponseTypes search_within_group(tr_dataset, search_within_group_data)
+> models::SearchWithinGroupResults search_within_group(tr_dataset, search_within_group_data)
 Search Within Group
 
 Search Within Group  This route allows you to search only within a group. This is useful for when you only want search results to contain chunks which are members of a specific group. If choosing hybrid search, the results will be re-ranked using BAAI/bge-reranker-large.
@@ -482,7 +482,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::SearchWithinGroupResponseTypes**](SearchWithinGroupResponseTypes.md)
+[**models::SearchWithinGroupResults**](SearchWithinGroupResults.md)
 
 ### Authorization
 
