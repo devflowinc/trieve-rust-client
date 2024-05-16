@@ -72,7 +72,7 @@ Name | Type | Description  | Required | Notes
 
 ## update_user
 
-> models::SlimUser update_user(update_user_data)
+> update_user(update_user_org_role_data)
 Update User
 
 Update User  Update a user's information. If the user_id is not provided, the auth'ed user will be updated. If the user_id is provided, the auth'ed user must be an admin (1) or owner (2) of the organization.
@@ -82,11 +82,11 @@ Update User  Update a user's information. If the user_id is not provided, the au
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**update_user_data** | [**UpdateUserData**](UpdateUserData.md) | JSON request payload to update user information for the auth'ed user | [required] |
+**update_user_org_role_data** | [**UpdateUserOrgRoleData**](UpdateUserOrgRoleData.md) | JSON request payload to update user information for the auth'ed user | [required] |
 
 ### Return type
 
-[**models::SlimUser**](SlimUser.md)
+ (empty response body)
 
 ### Authorization
 

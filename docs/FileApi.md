@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 ## delete_file_handler
 
-> delete_file_handler(tr_dataset, file_id, delete_chunks)
+> delete_file_handler(tr_dataset, file_id)
 Delete File
 
 Delete File  Delete a file from S3 attached to the server based on its id. This will disassociate chunks from the file, but only delete them all together if you specify delete_chunks to be true. Auth'ed user must be an admin or owner of the dataset's organization to delete a file.
@@ -25,7 +25,6 @@ Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **tr_dataset** | **String** | The dataset id to use for the request | [required] |
 **file_id** | **uuid::Uuid** | The id of the file to delete | [required] |
-**delete_chunks** | **bool** | Whether or not to delete the chunks associated with the file | [required] |
 
 ### Return type
 

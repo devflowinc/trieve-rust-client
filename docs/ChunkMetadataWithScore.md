@@ -5,7 +5,6 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **chunk_html** | Option<**String**> |  | [optional]
-**content** | **String** |  | 
 **created_at** | **String** |  | 
 **dataset_id** | [**uuid::Uuid**](uuid::Uuid.md) |  | 
 **id** | [**uuid::Uuid**](uuid::Uuid.md) |  | 

@@ -11,8 +11,10 @@ Method | HTTP request | Description
 [**generate_off_chunks**](ChunkApi.md#generate_off_chunks) | **POST** /api/chunk/generate | RAG on Specified Chunks
 [**get_chunk_by_id**](ChunkApi.md#get_chunk_by_id) | **GET** /api/chunk/{chunk_id} | Get Chunk By Id
 [**get_chunk_by_tracking_id**](ChunkApi.md#get_chunk_by_tracking_id) | **GET** /api/chunk/tracking_id/{tracking_id} | Get Chunk By Tracking Id
+[**get_chunks_by_ids**](ChunkApi.md#get_chunks_by_ids) | **POST** /api/chunks | Get Chunks By Ids
+[**get_chunks_by_tracking_ids**](ChunkApi.md#get_chunks_by_tracking_ids) | **POST** /api/chunks/tracking | Get Chunks By TrackingIds
 [**get_recommended_chunks**](ChunkApi.md#get_recommended_chunks) | **POST** /api/chunk/recommend | Get Recommended Chunks
-[**search_chunk**](ChunkApi.md#search_chunk) | **POST** /api/chunk/search | Search
+[**search_chunks**](ChunkApi.md#search_chunks) | **POST** /api/chunk/search | Search
 [**update_chunk**](ChunkApi.md#update_chunk) | **PUT** /api/chunk | Update Chunk
 [**update_chunk_by_tracking_id**](ChunkApi.md#update_chunk_by_tracking_id) | **PUT** /api/chunk/tracking_id/update | Update Chunk By Tracking Id
 
@@ -23,7 +25,7 @@ Method | HTTP request | Description
 > models::ReturnQueuedChunk create_chunk(tr_dataset, create_chunk_data)
 Create or Upsert Chunk or Chunks
 
-Create or Upsert Chunk or Chunks  Create a new chunk. If the chunk has the same tracking_id as an existing chunk, the request will fail. Once a chunk is created, it can be searched for using the search endpoint.
+Create or Upsert Chunk or Chunks  Create a new chunk. If the chunk has the same tracking_id as an existing chunk, the request will fail. Once a chunk is created, it can be searched for using the search endpoint. If uploading in bulk, the maximum amount of chunks that can be uploaded at once is 120 chunks.
 
 ### Parameters
 
@@ -235,6 +237,68 @@ Name | Type | Description  | Required | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
+## get_chunks_by_ids
+
+> Vec<models::ChunkMetadata> get_chunks_by_ids(tr_dataset, get_chunks_data)
+Get Chunks By Ids
+
+Get Chunks By Ids  Get multiple chunks by multiple ids.
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**get_chunks_data** | [**GetChunksData**](GetChunksData.md) | JSON request payload to get the chunks in the request | [required] |
+
+### Return type
+
+[**Vec<models::ChunkMetadata>**](ChunkMetadata.md)
+
+### Authorization
+
+[ApiKey](../README.md#ApiKey)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## get_chunks_by_tracking_ids
+
+> models::ChunkMetadata get_chunks_by_tracking_ids(tr_dataset, get_tracking_chunks_data)
+Get Chunks By TrackingIds
+
+Get Chunks By TrackingIds  Get multiple chunks by ids.
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**get_tracking_chunks_data** | [**GetTrackingChunksData**](GetTrackingChunksData.md) | JSON request payload to get the chunks in the request | [required] |
+
+### Return type
+
+[**models::ChunkMetadata**](ChunkMetadata.md)
+
+### Authorization
+
+[ApiKey](../README.md#ApiKey)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
 ## get_recommended_chunks
 
 > Vec<models::ChunkMetadataWithScore> get_recommended_chunks(tr_dataset, recommend_chunks_request)
@@ -266,12 +330,12 @@ Name | Type | Description  | Required | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
-## search_chunk
+## search_chunks
 
-> models::SearchChunkQueryResponseBody search_chunk(tr_dataset, search_chunk_data)
+> models::SearchChunkQueryResponseBody search_chunks(tr_dataset, search_chunk_data)
 Search
 
-Search  This route provides the primary search functionality for the API. It can be used to search for chunks by semantic similarity, full-text similarity, or a combination of both. Results' `chunk_html` values will be modified with `<b>` tags for sub-sentence highlighting.
+Search  This route provides the primary search functionality for the API. It can be used to search for chunks by semantic similarity, full-text similarity, or a combination of both. Results' `chunk_html` values will be modified with `<b><mark>` tags for sub-sentence highlighting.
 
 ### Parameters
 

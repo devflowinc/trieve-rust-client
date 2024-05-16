@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**chunk_count** | **i32** |  | 
 **dataset_count** | **i32** |  | 
 **file_storage** | **i64** |  | 
 **id** | [**uuid::Uuid**](uuid::Uuid.md) |  | 

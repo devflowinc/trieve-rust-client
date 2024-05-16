@@ -5,11 +5,12 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **chunk_html** | Option<**String**> |  | [optional]
-**content** | **String** |  | 
 **created_at** | **String** |  | 
 **dataset_id** | [**uuid::Uuid**](uuid::Uuid.md) |  | 
 **id** | [**uuid::Uuid**](uuid::Uuid.md) |  | 
+**image_urls** | Option<**Vec<String>**> |  | [optional]
 **link** | Option<**String**> |  | [optional]
+**location** | Option<[**models::GeoInfo**](GeoInfo.md)> |  | [optional]
 **metadata** | Option<[**serde_json::Value**](.md)> |  | [optional]
 **qdrant_point_id** | Option<[**uuid::Uuid**](uuid::Uuid.md)> |  | [optional]
 **tag_set** | Option<**String**> |  | [optional]

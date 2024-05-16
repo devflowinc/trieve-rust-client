@@ -9,8 +9,8 @@ Name | Type | Description | Notes
 **deleted** | **bool** |  | 
 **id** | [**uuid::Uuid**](uuid::Uuid.md) |  | 
 **name** | **String** |  | 
+**owner_id** | **String** |  | 
 **updated_at** | **String** |  | 
-**user_id** | [**uuid::Uuid**](uuid::Uuid.md) |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

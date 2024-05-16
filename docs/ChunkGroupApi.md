@@ -153,7 +153,7 @@ Name | Type | Description  | Required | Notes
 
 ## delete_group_by_tracking_id
 
-> delete_group_by_tracking_id(tr_dataset, tracking_id)
+> delete_group_by_tracking_id(tr_dataset, tracking_id, delete_chunks)
 Delete Group by Tracking ID
 
 Delete Group by Tracking ID  Delete a chunk_group with the given tracking id.
@@ -165,6 +165,7 @@ Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **tr_dataset** | **String** | The dataset id to use for the request | [required] |
 **tracking_id** | **String** | Tracking id of the chunk_group to delete | [required] |
+**delete_chunks** | **bool** | Delete the chunks within the group | [required] |
 
 ### Return type
 
