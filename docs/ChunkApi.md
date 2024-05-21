@@ -4,6 +4,7 @@ All URIs are relative to *https://api.trieve.ai*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**autocomplete**](ChunkApi.md#autocomplete) | **POST** /api/chunk/autocomplete | Autocomplete
 [**create_chunk**](ChunkApi.md#create_chunk) | **POST** /api/chunk | Create or Upsert Chunk or Chunks
 [**create_suggested_queries_handler**](ChunkApi.md#create_suggested_queries_handler) | **POST** /api/chunk/gen_suggestions | Generate suggested queries
 [**delete_chunk**](ChunkApi.md#delete_chunk) | **DELETE** /api/chunk/{chunk_id} | Delete Chunk
@@ -18,6 +19,37 @@ Method | HTTP request | Description
 [**update_chunk**](ChunkApi.md#update_chunk) | **PUT** /api/chunk | Update Chunk
 [**update_chunk_by_tracking_id**](ChunkApi.md#update_chunk_by_tracking_id) | **PUT** /api/chunk/tracking_id/update | Update Chunk By Tracking Id
 
+
+
+## autocomplete
+
+> models::SearchChunkQueryResponseBody autocomplete(tr_dataset, autocomplete_data)
+Autocomplete
+
+Autocomplete  This route provides the primary autocomplete functionality for the API. This prioritize prefix matching with semantic or full-text search.
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**autocomplete_data** | [**AutocompleteData**](AutocompleteData.md) | JSON request payload to semantically search for chunks (chunks) | [required] |
+
+### Return type
+
+[**models::SearchChunkQueryResponseBody**](SearchChunkQueryResponseBody.md)
+
+### Authorization
+
+[ApiKey](../README.md#ApiKey)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
 ## create_chunk

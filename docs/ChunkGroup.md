@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **metadata** | Option<[**serde_json::Value**](.md)> |  | [optional]
 **name** | **String** |  | 
 **tag_set** | Option<**String**> |  | [optional]
+**tag_set_array** | Option<**Vec<String>**> |  | [optional]
 **tracking_id** | Option<**String**> |  | [optional]
 **updated_at** | **String** |  | 
 

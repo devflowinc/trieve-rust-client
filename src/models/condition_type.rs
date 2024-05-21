@@ -12,15 +12,14 @@ use crate::models;
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
-pub enum ChunkMetadataTypes {
-    SlimChunkMetadata(Box<models::SlimChunkMetadata>),
-    ChunkMetadata(Box<models::ChunkMetadata>),
-    ContentChunkMetadata(Box<models::ContentChunkMetadata>),
+pub enum ConditionType {
+    FieldCondition(Box<models::FieldCondition>),
+    HasIdCondition(Box<models::HasIdCondition>),
 }
 
-impl Default for ChunkMetadataTypes {
+impl Default for ConditionType {
     fn default() -> Self {
-        Self::SlimChunkMetadata(Default::default())
+        Self::FieldCondition(Default::default())
     }
 }
 

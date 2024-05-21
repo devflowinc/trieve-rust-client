@@ -6,6 +6,7 @@ docs/AddChunkToGroupData.md
 docs/ApiKeyDto.md
 docs/AuthApi.md
 docs/AuthQuery.md
+docs/AutocompleteData.md
 docs/BatchQueuedChunkResponse.md
 docs/BookmarkData.md
 docs/BookmarkGroupResult.md
@@ -20,6 +21,7 @@ docs/ChunkMetadata.md
 docs/ChunkMetadataTypes.md
 docs/ChunkMetadataWithScore.md
 docs/ClientDatasetConfiguration.md
+docs/ConditionType.md
 docs/ContentChunkMetadata.md
 docs/CreateChunkData.md
 docs/CreateChunkGroupData.md
@@ -53,6 +55,7 @@ docs/GetGroupsForChunksData.md
 docs/GetTrackingChunksData.md
 docs/GroupData.md
 docs/GroupScoreChunk.md
+docs/HasIdCondition.md
 docs/HealthApi.md
 docs/InvitationApi.md
 docs/InvitationData.md
@@ -123,6 +126,7 @@ src/lib.rs
 src/models/add_chunk_to_group_data.rs
 src/models/api_key_dto.rs
 src/models/auth_query.rs
+src/models/autocomplete_data.rs
 src/models/batch_queued_chunk_response.rs
 src/models/bookmark_data.rs
 src/models/bookmark_group_result.rs
@@ -135,6 +139,7 @@ src/models/chunk_metadata.rs
 src/models/chunk_metadata_types.rs
 src/models/chunk_metadata_with_score.rs
 src/models/client_dataset_configuration.rs
+src/models/condition_type.rs
 src/models/content_chunk_metadata.rs
 src/models/create_chunk_data.rs
 src/models/create_chunk_group_data.rs
@@ -165,6 +170,7 @@ src/models/get_groups_for_chunks_data.rs
 src/models/get_tracking_chunks_data.rs
 src/models/group_data.rs
 src/models/group_score_chunk.rs
+src/models/has_id_condition.rs
 src/models/invitation_data.rs
 src/models/location_bounding_box.rs
 src/models/location_polygon.rs

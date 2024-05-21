@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **metadata** | Option<[**serde_json::Value**](.md)> |  | [optional]
 **qdrant_point_id** | Option<[**uuid::Uuid**](uuid::Uuid.md)> |  | [optional]
 **tag_set** | Option<**String**> |  | [optional]
+**tag_set_array** | Option<**Vec<String>**> |  | [optional]
 **time_stamp** | Option<**String**> |  | [optional]
 **tracking_id** | Option<**String**> |  | [optional]
 **updated_at** | **String** |  | 

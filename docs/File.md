@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **metadata** | Option<[**serde_json::Value**](.md)> |  | [optional]
 **size** | **i64** |  | 
 **tag_set** | Option<**String**> |  | [optional]
+**tag_set_array** | Option<**Vec<String>**> |  | [optional]
 **time_stamp** | Option<**String**> |  | [optional]
 **updated_at** | **String** |  | 
 

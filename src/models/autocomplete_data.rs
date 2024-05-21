@@ -11,18 +11,12 @@
 use crate::models;
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
-pub struct SearchChunkData {
+pub struct AutocompleteData {
     /// Set content_only to true to only returning the chunk_html of the chunks. This is useful for when you want to reduce amount of data over the wire for latency improvement (typically 10-50ms). Default is false.
     #[serde(rename = "content_only", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub content_only: Option<Option<bool>>,
     #[serde(rename = "filters", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub filters: Option<Option<Box<models::ChunkFilter>>>,
-    /// Set get_collisions to true to get the collisions for each chunk. This will only apply if environment variable COLLISIONS_ENABLED is set to true.
-    #[serde(rename = "get_collisions", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
-    pub get_collisions: Option<Option<bool>>,
-    /// Get total page count for the query accounting for the applied filters. Defaults to false, but can be set to true when the latency penalty is acceptable (typically 50-200ms).
-    #[serde(rename = "get_total_pages", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
-    pub get_total_pages: Option<Option<bool>>,
     /// Set highlight_delimiters to a list of strings to use as delimiters for highlighting. If not specified, this defaults to [\"?\", \",\", \".\", \"!\"].
     #[serde(rename = "highlight_delimiters", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub highlight_delimiters: Option<Option<Vec<String>>>,
@@ -32,9 +26,6 @@ pub struct SearchChunkData {
     /// Set highlight_threshold to a lower or higher value to adjust the sensitivity of the highlights applied to the chunk html. If not specified, this defaults to 0.8. The range is 0.0 to 1.0.
     #[serde(rename = "highlight_threshold", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub highlight_threshold: Option<Option<f64>>,
-    /// Page of chunks to fetch. Page is 1-indexed.
-    #[serde(rename = "page", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
-    pub page: Option<Option<i64>>,
     /// Page size is the number of chunks to fetch. This can be used to fetch more than 10 chunks at a time.
     #[serde(rename = "page_size", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub page_size: Option<Option<i64>>,
@@ -47,7 +38,7 @@ pub struct SearchChunkData {
     /// Set score_threshold to a float to filter out chunks with a score below the threshold.
     #[serde(rename = "score_threshold", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
     pub score_threshold: Option<Option<f32>>,
-    /// Can be either \"semantic\", \"fulltext\", or \"hybrid\". If specified as \"hybrid\", it will pull in one page (10 chunks) of both semantic and full-text results then re-rank them using BAAI/bge-reranker-large. \"semantic\" will pull in one page (10 chunks) of the nearest cosine distant vectors. \"fulltext\" will pull in one page (10 chunks) of full-text results based on SPLADE.
+    /// Can be either \"semantic\", or \"fulltext\". \"semantic\" will pull in one page (10 chunks) of the nearest cosine distant vectors. \"fulltext\" will pull in one page (10 chunks) of full-text results based on SPLADE.
     #[serde(rename = "search_type")]
     pub search_type: String,
     /// Set slim_chunks to true to avoid returning the content and chunk_html of the chunks. This is useful for when you want to reduce amount of data over the wire for latency improvement (typically 10-50ms). Default is false.
@@ -61,17 +52,14 @@ pub struct SearchChunkData {
     pub use_weights: Option<Option<bool>>,
 }
 
-impl SearchChunkData {
-    pub fn new(query: String, search_type: String) -> SearchChunkData {
-        SearchChunkData {
+impl AutocompleteData {
+    pub fn new(query: String, search_type: String) -> AutocompleteData {
+        AutocompleteData {
             content_only: None,
             filters: None,
-            get_collisions: None,
-            get_total_pages: None,
             highlight_delimiters: None,
             highlight_results: None,
             highlight_threshold: None,
-            page: None,
             page_size: None,
             query,
             recency_bias: None,
