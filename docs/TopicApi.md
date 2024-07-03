@@ -13,10 +13,10 @@ Method | HTTP request | Description
 
 ## create_topic
 
-> models::Topic create_topic(tr_dataset, create_topic_data)
+> models::Topic create_topic(tr_dataset, create_topic_req_payload)
 Create Topic
 
-Create Topic  Create a new chat topic. Topics are attached to a owner_id's and act as a coordinator for conversation message history of gen-AI chat sessions.
+Create a new chat topic. Topics are attached to a owner_id's and act as a coordinator for conversation message history of gen-AI chat sessions. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -24,7 +24,7 @@ Create Topic  Create a new chat topic. Topics are attached to a owner_id's and a
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **tr_dataset** | **String** | The dataset id to use for the request | [required] |
-**create_topic_data** | [**CreateTopicData**](CreateTopicData.md) | JSON request payload to create chat topic | [required] |
+**create_topic_req_payload** | [**CreateTopicReqPayload**](CreateTopicReqPayload.md) | JSON request payload to create chat topic | [required] |
 
 ### Return type
 
@@ -47,7 +47,7 @@ Name | Type | Description  | Required | Notes
 > delete_topic(tr_dataset, topic_id)
 Delete Topic
 
-Delete Topic  Delete an existing chat topic. When a topic is deleted, all associated chat messages are also deleted.
+Delete an existing chat topic. When a topic is deleted, all associated chat messages are also deleted. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -78,7 +78,7 @@ Name | Type | Description  | Required | Notes
 > Vec<models::Topic> get_all_topics_for_owner_id(owner_id, tr_dataset)
 Get All Topics for Owner ID
 
-Get All Topics for Owner ID  Get all topics belonging to an arbitary owner_id. This is useful for managing message history and chat sessions. It is common to use a browser fingerprint or your user's id as the owner_id.
+Get all topics belonging to an arbitary owner_id. This is useful for managing message history and chat sessions. It is common to use a browser fingerprint or your user's id as the owner_id. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -106,10 +106,10 @@ Name | Type | Description  | Required | Notes
 
 ## update_topic
 
-> update_topic(tr_dataset, update_topic_data)
+> update_topic(tr_dataset, update_topic_req_payload)
 Update Topic
 
-Update Topic  Update an existing chat topic. Currently, only the name of the topic can be updated.
+Update an existing chat topic. Currently, only the name of the topic can be updated. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -117,7 +117,7 @@ Update Topic  Update an existing chat topic. Currently, only the name of the top
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **tr_dataset** | **String** | The dataset id to use for the request | [required] |
-**update_topic_data** | [**UpdateTopicData**](UpdateTopicData.md) | JSON request payload to update a chat topic | [required] |
+**update_topic_req_payload** | [**UpdateTopicReqPayload**](UpdateTopicReqPayload.md) | JSON request payload to update a chat topic | [required] |
 
 ### Return type
 

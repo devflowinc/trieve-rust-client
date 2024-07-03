@@ -5,8 +5,8 @@ All URIs are relative to *https://api.trieve.ai*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**create_organization**](OrganizationApi.md#create_organization) | **POST** /api/organization | Create Organization
-[**delete_organization_by_id**](OrganizationApi.md#delete_organization_by_id) | **DELETE** /api/organization/{organization_id} | Delete Organization
-[**get_organization_by_id**](OrganizationApi.md#get_organization_by_id) | **GET** /api/organization/{organization_id} | Get Organization
+[**delete_organization**](OrganizationApi.md#delete_organization) | **DELETE** /api/organization/{organization_id} | Delete Organization
+[**get_organization**](OrganizationApi.md#get_organization) | **GET** /api/organization/{organization_id} | Get Organization
 [**get_organization_usage**](OrganizationApi.md#get_organization_usage) | **GET** /api/organization/usage/{organization_id} | Get Organization Usage
 [**get_organization_users**](OrganizationApi.md#get_organization_users) | **GET** /api/organization/users/{organization_id} | Get Organization Users
 [**update_organization**](OrganizationApi.md#update_organization) | **PUT** /api/organization | Update Organization
@@ -18,7 +18,7 @@ Method | HTTP request | Description
 > models::Organization create_organization(create_organization_data)
 Create Organization
 
-Create Organization  Create a new organization. The auth'ed user who creates the organization will be the default owner of the organization.
+Create a new organization. The auth'ed user who creates the organization will be the default owner of the organization.
 
 ### Parameters
 
@@ -43,12 +43,12 @@ Name | Type | Description  | Required | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
-## delete_organization_by_id
+## delete_organization
 
-> models::Organization delete_organization_by_id(tr_organization, organization_id)
+> delete_organization(tr_organization, organization_id)
 Delete Organization
 
-Delete Organization  Delete an organization by its id. The auth'ed user must be an owner of the organization to delete it.
+Delete an organization by its id. The auth'ed user must be an owner of the organization to delete it.
 
 ### Parameters
 
@@ -60,7 +60,7 @@ Name | Type | Description  | Required | Notes
 
 ### Return type
 
-[**models::Organization**](Organization.md)
+ (empty response body)
 
 ### Authorization
 
@@ -74,12 +74,12 @@ Name | Type | Description  | Required | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
-## get_organization_by_id
+## get_organization
 
-> models::Organization get_organization_by_id(tr_organization, organization_id)
+> models::Organization get_organization(tr_organization, organization_id)
 Get Organization
 
-Get Organization  Fetch the details of an organization by its id. The auth'ed user must be an admin or owner of the organization to fetch it.
+Fetch the details of an organization by its id. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -110,7 +110,7 @@ Name | Type | Description  | Required | Notes
 > models::OrganizationUsageCount get_organization_usage(tr_organization, organization_id)
 Get Organization Usage
 
-Get Organization Usage  Fetch the current usage specification of an organization by its id. The auth'ed user must be an admin or owner of the organization to fetch it.
+Fetch the current usage specification of an organization by its id. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -141,7 +141,7 @@ Name | Type | Description  | Required | Notes
 > Vec<models::SlimUser> get_organization_users(tr_organization, organization_id)
 Get Organization Users
 
-Get Organization Users  Fetch the users of an organization by its id. The auth'ed user must be an admin or owner of the organization to fetch it.
+Fetch the users of an organization by its id. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -172,7 +172,7 @@ Name | Type | Description  | Required | Notes
 > models::Organization update_organization(tr_organization, update_organization_data)
 Update Organization
 
-Update Organization  Update an organization. Only the owner of the organization can update it.
+Update an organization. Only the owner of the organization can update it.
 
 ### Parameters
 

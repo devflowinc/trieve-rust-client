@@ -16,7 +16,7 @@ Method | HTTP request | Description
 > delete_file_handler(tr_dataset, file_id)
 Delete File
 
-Delete File  Delete a file from S3 attached to the server based on its id. This will disassociate chunks from the file, but only delete them all together if you specify delete_chunks to be true. Auth'ed user must be an admin or owner of the dataset's organization to delete a file.
+Delete a file from S3 attached to the server based on its id. This will disassociate chunks from the file, but only delete them all together if you specify delete_chunks to be true. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -47,7 +47,7 @@ Name | Type | Description  | Required | Notes
 > Vec<models::File> get_dataset_files_handler(tr_dataset, dataset_id, page)
 Get Files for Dataset
 
-Get Files for Dataset  Get all files which belong to a given dataset specified by the dataset_id parameter. 10 files are returned per page.
+Get all files which belong to a given dataset specified by the dataset_id parameter. 10 files are returned per page.
 
 ### Parameters
 
@@ -79,7 +79,7 @@ Name | Type | Description  | Required | Notes
 > models::FileDto get_file_handler(tr_dataset, file_id)
 Get File
 
-Get File  Download a file based on its id.
+Download a file based on its id.
 
 ### Parameters
 
@@ -107,10 +107,10 @@ Name | Type | Description  | Required | Notes
 
 ## upload_file_handler
 
-> models::UploadFileResult upload_file_handler(tr_dataset, upload_file_data)
+> models::UploadFileResult upload_file_handler(tr_dataset, upload_file_req_payload)
 Upload File
 
-Upload File  Upload a file to S3 attached to the server. The file will be converted to HTML with tika and chunked algorithmically, images will be OCR'ed with tesseract. The resulting chunks will be indexed and searchable. Optionally, you can only upload the file and manually create chunks associated to the file after. See docs.trieve.ai and/or contact us for more details and tips. Auth'ed user must be an admin or owner of the dataset's organization to upload a file.
+Upload a file to S3 attached to the server. The file will be converted to HTML with tika and chunked algorithmically, images will be OCR'ed with tesseract. The resulting chunks will be indexed and searchable. Optionally, you can only upload the file and manually create chunks associated to the file after. See docs.trieve.ai and/or contact us for more details and tips. Auth'ed user must be an admin or owner of the dataset's organization to upload a file.
 
 ### Parameters
 
@@ -118,7 +118,7 @@ Upload File  Upload a file to S3 attached to the server. The file will be conver
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **tr_dataset** | **String** | The dataset id to use for the request | [required] |
-**upload_file_data** | [**UploadFileData**](UploadFileData.md) | JSON request payload to upload a file | [required] |
+**upload_file_req_payload** | [**UploadFileReqPayload**](UploadFileReqPayload.md) | JSON request payload to upload a file | [required] |
 
 ### Return type
 

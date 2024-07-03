@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**client_configuration** | Option<[**serde_json::Value**](.md)> |  | 
 **created_at** | **String** |  | 
+**deleted** | **i32** |  | 
 **id** | [**uuid::Uuid**](uuid::Uuid.md) |  | 
 **name** | **String** |  | 
 **organization_id** | [**uuid::Uuid**](uuid::Uuid.md) |  | 

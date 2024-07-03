@@ -16,7 +16,7 @@ Method | HTTP request | Description
 > models::SlimUser callback()
 OpenID Connect callback
 
-OpenID Connect callback  This is the callback route for the OAuth provider, it should not be called directly. Redirects to browser with set-cookie header.
+This is the callback route for the OAuth provider, it should not be called directly. Redirects to browser with set-cookie header.
 
 ### Parameters
 
@@ -43,7 +43,7 @@ No authorization required
 > models::SlimUser get_me()
 Get Me
 
-Get Me  Get the user corresponding to your current auth credentials.
+Get the user corresponding to your current auth credentials.
 
 ### Parameters
 
@@ -70,7 +70,7 @@ This endpoint does not need any parameter.
 > login(organization_id, redirect_uri, inv_code)
 Login
 
-Login  This will redirect you to the OAuth provider for authentication with email/pass, SSO, Google, Github, etc.
+This will redirect you to the OAuth provider for authentication with email/pass, SSO, Google, Github, etc.
 
 ### Parameters
 
@@ -102,7 +102,7 @@ No authorization required
 > logout()
 Logout
 
-Logout  Invalidate your current auth credential stored typically stored in a cookie. This does not invalidate your API key.
+Invalidate your current auth credential stored typically stored in a cookie. This does not invalidate your API key.
 
 ### Parameters
 

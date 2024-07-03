@@ -4,7 +4,6 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**client_configuration** | Option<[**serde_json::Value**](.md)> |  | 
 **created_at** | **String** |  | 
 **id** | [**uuid::Uuid**](uuid::Uuid.md) |  | 
 **name** | **String** |  | 

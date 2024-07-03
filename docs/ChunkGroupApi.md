@@ -14,8 +14,8 @@ Method | HTTP request | Description
 [**get_chunks_in_group_by_tracking_id**](ChunkGroupApi.md#get_chunks_in_group_by_tracking_id) | **GET** /api/chunk_group/tracking_id/{group_tracking_id}/{page} | Get Chunks in Group by Tracking ID
 [**get_group_by_tracking_id**](ChunkGroupApi.md#get_group_by_tracking_id) | **GET** /api/chunk_group/tracking_id/{tracking_id} | Get Group by Tracking ID
 [**get_groups_chunk_is_in**](ChunkGroupApi.md#get_groups_chunk_is_in) | **POST** /api/chunk_group/chunks | Get Groups for Chunks
+[**get_groups_for_dataset**](ChunkGroupApi.md#get_groups_for_dataset) | **GET** /api/dataset/groups/{dataset_id}/{page} | Get Groups for Dataset
 [**get_recommended_groups**](ChunkGroupApi.md#get_recommended_groups) | **POST** /api/chunk_group/recommend | Get Recommended Groups
-[**get_specific_dataset_chunk_groups**](ChunkGroupApi.md#get_specific_dataset_chunk_groups) | **GET** /api/dataset/groups/{dataset_id}/{page} | Get Groups for Dataset
 [**remove_chunk_from_group**](ChunkGroupApi.md#remove_chunk_from_group) | **DELETE** /api/chunk_group/chunk/{group_id} | Remove Chunk from Group
 [**search_over_groups**](ChunkGroupApi.md#search_over_groups) | **POST** /api/chunk_group/group_oriented_search | Search Over Groups
 [**search_within_group**](ChunkGroupApi.md#search_within_group) | **POST** /api/chunk_group/search | Search Within Group
@@ -29,7 +29,7 @@ Method | HTTP request | Description
 > add_chunk_to_group(tr_dataset, group_id, add_chunk_to_group_data)
 Add Chunk to Group
 
-Add Chunk to Group  Route to add a chunk to a group.
+Route to add a chunk to a group. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -61,7 +61,7 @@ Name | Type | Description  | Required | Notes
 > add_chunk_to_group_by_tracking_id(tr_dataset, tracking_id, add_chunk_to_group_data)
 Add Chunk to Group by Tracking ID
 
-Add Chunk to Group by Tracking ID  Route to add a chunk to a group by tracking id.
+Route to add a chunk to a group by tracking id. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -90,10 +90,10 @@ Name | Type | Description  | Required | Notes
 
 ## create_chunk_group
 
-> models::ChunkGroup create_chunk_group(tr_dataset, create_chunk_group_data)
+> models::ChunkGroup create_chunk_group(tr_dataset, create_chunk_group_req_payload)
 Create Chunk Group
 
-Create Chunk Group  Create a new chunk_group. This is a way to group chunks together. If you try to create a chunk_group with the same tracking_id as an existing chunk_group, this operation will fail.
+Create a new chunk_group. This is a way to group chunks together. If you try to create a chunk_group with the same tracking_id as an existing chunk_group, this operation will fail. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -101,7 +101,7 @@ Create Chunk Group  Create a new chunk_group. This is a way to group chunks toge
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **tr_dataset** | **String** | The dataset id to use for the request | [required] |
-**create_chunk_group_data** | [**CreateChunkGroupData**](CreateChunkGroupData.md) | JSON request payload to cretea a chunkGroup | [required] |
+**create_chunk_group_req_payload** | [**CreateChunkGroupReqPayload**](CreateChunkGroupReqPayload.md) | JSON request payload to cretea a chunkGroup | [required] |
 
 ### Return type
 
@@ -124,7 +124,7 @@ Name | Type | Description  | Required | Notes
 > delete_chunk_group(tr_dataset, group_id, delete_chunks)
 Delete Group
 
-Delete Group  This will delete a chunk_group. If you set delete_chunks to true, it will also delete the chunks within the group.
+This will delete a chunk_group. If you set delete_chunks to true, it will also delete the chunks within the group. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -156,7 +156,7 @@ Name | Type | Description  | Required | Notes
 > delete_group_by_tracking_id(tr_dataset, tracking_id, delete_chunks)
 Delete Group by Tracking ID
 
-Delete Group by Tracking ID  Delete a chunk_group with the given tracking id.
+Delete a chunk_group with the given tracking id. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -188,7 +188,7 @@ Name | Type | Description  | Required | Notes
 > models::ChunkGroup get_chunk_group(tr_dataset, group_id)
 Get Group
 
-Get Group  Fetch the group with the given id. get_group
+Fetch the group with the given id. get_group
 
 ### Parameters
 
@@ -219,7 +219,7 @@ Name | Type | Description  | Required | Notes
 > models::BookmarkData get_chunks_in_group(tr_dataset, group_id, page)
 Get Chunks in Group
 
-Get Chunks in Group  Route to get all chunks for a group. The response is paginated, with each page containing 10 chunks. Page is 1-indexed.
+Route to get all chunks for a group. The response is paginated, with each page containing 10 chunks. Page is 1-indexed.
 
 ### Parameters
 
@@ -251,7 +251,7 @@ Name | Type | Description  | Required | Notes
 > models::BookmarkData get_chunks_in_group_by_tracking_id(tr_dataset, group_tracking_id, page)
 Get Chunks in Group by Tracking ID
 
-Get Chunks in Group by Tracking ID  Route to get all chunks for a group. The response is paginated, with each page containing 10 chunks. Support for custom page size is coming soon. Page is 1-indexed.
+Route to get all chunks for a group. The response is paginated, with each page containing 10 chunks. Support for custom page size is coming soon. Page is 1-indexed.
 
 ### Parameters
 
@@ -283,7 +283,7 @@ Name | Type | Description  | Required | Notes
 > models::ChunkGroup get_group_by_tracking_id(tr_dataset, tracking_id)
 Get Group by Tracking ID
 
-Get Group by Tracking ID  Fetch the group with the given tracking id. get_group_by_tracking_id
+Fetch the group with the given tracking id. get_group_by_tracking_id
 
 ### Parameters
 
@@ -314,7 +314,7 @@ Name | Type | Description  | Required | Notes
 > Vec<models::BookmarkGroupResult> get_groups_chunk_is_in(tr_dataset, get_groups_for_chunks_data)
 Get Groups for Chunks
 
-Get Groups for Chunks  Route to get the groups that a chunk is in.
+Route to get the groups that a chunk is in.
 
 ### Parameters
 
@@ -340,43 +340,12 @@ Name | Type | Description  | Required | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
-## get_recommended_groups
+## get_groups_for_dataset
 
-> Vec<models::GroupScoreChunk> get_recommended_groups(tr_dataset, recommend_group_chunks_request)
-Get Recommended Groups
-
-Get Recommended Groups  Route to get recommended groups. This route will return groups which are similar to the groups in the request body.
-
-### Parameters
-
-
-Name | Type | Description  | Required | Notes
-------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
-**recommend_group_chunks_request** | [**RecommendGroupChunksRequest**](RecommendGroupChunksRequest.md) | JSON request payload to get recommendations of chunks similar to the chunks in the request | [required] |
-
-### Return type
-
-[**Vec<models::GroupScoreChunk>**](GroupScoreChunk.md)
-
-### Authorization
-
-[ApiKey](../README.md#ApiKey)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-
-## get_specific_dataset_chunk_groups
-
-> models::GroupData get_specific_dataset_chunk_groups(tr_dataset, dataset_id, page)
+> models::GroupData get_groups_for_dataset(tr_dataset, dataset_id, page)
 Get Groups for Dataset
 
-Get Groups for Dataset  Fetch the groups which belong to a dataset specified by its id.
+Fetch the groups which belong to a dataset specified by its id.
 
 ### Parameters
 
@@ -403,12 +372,12 @@ Name | Type | Description  | Required | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
-## remove_chunk_from_group
+## get_recommended_groups
 
-> remove_chunk_from_group(tr_dataset, group_id, create_chunk_group_data)
-Remove Chunk from Group
+> Vec<models::GroupScoreChunk> get_recommended_groups(tr_dataset, recommend_group_chunks_request)
+Get Recommended Groups
 
-Remove Chunk from Group  Route to remove a chunk from a group.
+Route to get recommended groups. This route will return groups which are similar to the groups in the request body. You must provide at least one positive group id or group tracking id.
 
 ### Parameters
 
@@ -416,8 +385,39 @@ Remove Chunk from Group  Route to remove a chunk from a group.
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **tr_dataset** | **String** | The dataset id to use for the request | [required] |
-**group_id** | **uuid::Uuid** | Id of the group to remove the bookmark'ed chunk from | [required] |
-**create_chunk_group_data** | [**CreateChunkGroupData**](CreateChunkGroupData.md) | JSON request payload to cretea a chunkGroup | [required] |
+**recommend_group_chunks_request** | [**RecommendGroupChunksRequest**](RecommendGroupChunksRequest.md) | JSON request payload to get recommendations of chunks similar to the chunks in the request | [required] |
+
+### Return type
+
+[**Vec<models::GroupScoreChunk>**](GroupScoreChunk.md)
+
+### Authorization
+
+[ApiKey](../README.md#ApiKey)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## remove_chunk_from_group
+
+> remove_chunk_from_group(tr_dataset, group_id, remove_chunk_from_group_req_payload)
+Remove Chunk from Group
+
+Route to remove a chunk from a group. Auth'ed user or api key must be an admin or owner of the dataset's organization to remove a chunk from a group.
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**group_id** | **uuid::Uuid** | Id of the group you want to remove the chunk from. | [required] |
+**remove_chunk_from_group_req_payload** | [**RemoveChunkFromGroupReqPayload**](RemoveChunkFromGroupReqPayload.md) | JSON request payload to remove a chunk from a group | [required] |
 
 ### Return type
 
@@ -440,7 +440,7 @@ Name | Type | Description  | Required | Notes
 > models::SearchOverGroupsResults search_over_groups(tr_dataset, search_over_groups_data)
 Search Over Groups
 
-Search Over Groups  This route allows you to get groups as results instead of chunks. Each group returned will have the matching chunks sorted by similarity within the group. This is useful for when you want to get groups of chunks which are similar to the search query. If choosing hybrid search, the results will be re-ranked using BAAI/bge-reranker-large. Compatible with semantic, fulltext, or hybrid search modes.
+This route allows you to get groups as results instead of chunks. Each group returned will have the matching chunks sorted by similarity within the group. This is useful for when you want to get groups of chunks which are similar to the search query. If choosing hybrid search, the results will be re-ranked using BAAI/bge-reranker-large. Compatible with semantic, fulltext, or hybrid search modes.
 
 ### Parameters
 
@@ -471,7 +471,7 @@ Name | Type | Description  | Required | Notes
 > models::SearchWithinGroupResults search_within_group(tr_dataset, search_within_group_data)
 Search Within Group
 
-Search Within Group  This route allows you to search only within a group. This is useful for when you only want search results to contain chunks which are members of a specific group. If choosing hybrid search, the results will be re-ranked using BAAI/bge-reranker-large.
+This route allows you to search only within a group. This is useful for when you only want search results to contain chunks which are members of a specific group. If choosing hybrid search, the results will be re-ranked using BAAI/bge-reranker-large.
 
 ### Parameters
 
@@ -502,7 +502,7 @@ Name | Type | Description  | Required | Notes
 > update_chunk_group(tr_dataset, update_chunk_group_data)
 Update Group
 
-Update Group  Update a chunk_group. If you try to change the tracking_id to one that already exists, this operation will fail.
+Update a chunk_group. If you try to change the tracking_id to one that already exists, this operation will fail. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -530,10 +530,10 @@ Name | Type | Description  | Required | Notes
 
 ## update_group_by_tracking_id
 
-> update_group_by_tracking_id(tr_dataset, tracking_id, update_group_by_tracking_id_data)
+> update_group_by_tracking_id(tr_dataset, tracking_id, update_group_by_tracking_id_req_payload)
 Update Group by Tracking ID
 
-Update Group by Tracking ID  Update a chunk_group with the given tracking id.
+Update a chunk_group with the given tracking id. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
 
 ### Parameters
 
@@ -542,7 +542,7 @@ Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **tr_dataset** | **String** | The dataset id to use for the request | [required] |
 **tracking_id** | **uuid::Uuid** | Tracking id of the chunk_group to update | [required] |
-**update_group_by_tracking_id_data** | [**UpdateGroupByTrackingIdData**](UpdateGroupByTrackingIdData.md) | JSON request payload to update a chunkGroup | [required] |
+**update_group_by_tracking_id_req_payload** | [**UpdateGroupByTrackingIdReqPayload**](UpdateGroupByTrackingIdReqPayload.md) | JSON request payload to update a chunkGroup | [required] |
 
 ### Return type
 

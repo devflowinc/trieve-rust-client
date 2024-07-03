@@ -5,6 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **created_at** | **String** |  | 
+**deleted** | **i32** |  | 
 **id** | [**uuid::Uuid**](uuid::Uuid.md) |  | 
 **name** | **String** |  | 
 **registerable** | Option<**bool**> |  | [optional]

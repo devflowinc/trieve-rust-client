@@ -16,7 +16,7 @@ Method | HTTP request | Description
 > cancel_subscription(tr_organization, subscription_id)
 Cancel Subscription
 
-Cancel Subscription  Cancel a subscription by its id
+Cancel a subscription by its id
 
 ### Parameters
 
@@ -47,7 +47,7 @@ Name | Type | Description  | Required | Notes
 > direct_to_payment_link(plan_id, organization_id)
 Checkout
 
-Checkout  Get a direct link to the stripe checkout page for the plan and organization
+Get a direct link to the stripe checkout page for the plan and organization
 
 ### Parameters
 
@@ -78,7 +78,7 @@ No authorization required
 > Vec<models::StripePlan> get_all_plans()
 Get All Plans
 
-Get All Plans  Get a list of all plans
+Get a list of all plans
 
 ### Parameters
 
@@ -105,7 +105,7 @@ No authorization required
 > update_subscription_plan(tr_organization, subscription_id, plan_id)
 Update Subscription Plan
 
-Update Subscription Plan  Update a subscription to a new plan
+Update a subscription to a new plan
 
 ### Parameters
 

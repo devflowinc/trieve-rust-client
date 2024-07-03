@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**highlights** | Option<**Vec<String>**> |  | [optional]
 **metadata** | [**Vec<models::ChunkMetadataTypes>**](ChunkMetadataTypes.md) |  | 
 **score** | **f64** |  | 
 

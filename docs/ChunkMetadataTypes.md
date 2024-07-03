@@ -4,7 +4,7 @@
 
 | Name | Description |
 |---- | -----|
-| ChunkMetadata |  |
+| ChunkMetadataStringTagSet |  |
 | ContentChunkMetadata |  |
 | SlimChunkMetadata |  |
 

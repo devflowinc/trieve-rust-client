@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **name** | Option<**String**> | Name to assign to the chunk_group. Does not need to be unique. If not provided, the name will not be updated. | [optional]
 **tag_set** | Option<**Vec<String>**> | Optional tags to assign to the chunk_group. This is a list of strings that can be used to categorize the chunks inside the chunk_group. | [optional]
 **tracking_id** | Option<**String**> | Tracking Id of the chunk_group to update. | [optional]
+**update_chunks** | Option<**bool**> | Flag to update the chunks in the group. If true, each chunk in the group will be updated by appending the group's tags to the chunk's tags. Default is false. | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
