@@ -14,7 +14,6 @@ use crate::models;
 #[serde(untagged)]
 pub enum RecommendationAnalyticsResponse {
     RecommendationsEventResponse(Box<models::RecommendationsEventResponse>),
-    RecommendationsEventResponse(Box<models::RecommendationsEventResponse>),
 }
 
 impl Default for RecommendationAnalyticsResponse {
@@ -22,4 +21,3 @@ impl Default for RecommendationAnalyticsResponse {
         Self::RecommendationsEventResponse(Default::default())
     }
 }
-

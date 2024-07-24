@@ -18,8 +18,6 @@ pub enum SearchAnalyticsResponse {
     DatasetAnalytics(Box<models::DatasetAnalytics>),
     HeadQueryResponse(Box<models::HeadQueryResponse>),
     SearchQueryResponse(Box<models::SearchQueryResponse>),
-    SearchQueryResponse(Box<models::SearchQueryResponse>),
-    SearchQueryResponse(Box<models::SearchQueryResponse>),
     QueryCountResponse(Box<models::QueryCountResponse>),
     SearchQueryEvent(Box<models::SearchQueryEvent>),
 }
@@ -29,4 +27,3 @@ impl Default for SearchAnalyticsResponse {
         Self::LatencyGraphResponse(Default::default())
     }
 }
-
