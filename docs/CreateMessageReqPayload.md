@@ -14,10 +14,12 @@ Name | Type | Description | Notes
 **new_message_content** | **String** | The content of the user message to attach to the topic and then generate an assistant message in response to. | 
 **page_size** | Option<**i64**> | Page size is the number of chunks to fetch during RAG. If 0, then no search will be performed. If specified, this will override the N retrievals to include in the dataset configuration. Default is None. | [optional]
 **presence_penalty** | Option<**f32**> | Presence penalty is a number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics. Default is 0.7. | [optional]
+**score_threshold** | Option<**f32**> | Set score_threshold to a float to filter out chunks with a score below the threshold. This threshold applies before weight and bias modifications. If not specified, this defaults to 0.0. | [optional]
 **search_query** | Option<**String**> | Query is the search query. This can be any string. The search_query will be used to create a dense embedding vector and/or sparse vector which will be used to find the result set. If not specified, will default to the last user message or HyDE if HyDE is enabled in the dataset configuration. Default is None. | [optional]
-**search_type** | Option<**String**> | Search_type can be either \"semantic\", \"fulltext\", or \"hybrid\". \"hybrid\" will pull in one page (10 chunks) of both semantic and full-text results then re-rank them using BAAI/bge-reranker-large. \"semantic\" will pull in one page (10 chunks) of the nearest cosine distant vectors. \"fulltext\" will pull in one page (10 chunks) of full-text results based on SPLADE. Default is \"hybrid\". | [optional]
+**search_type** | Option<[**models::SearchMethod**](SearchMethod.md)> |  | [optional]
 **stop_tokens** | Option<**Vec<String>**> | Stop tokens are up to 4 sequences where the API will stop generating further tokens. Default is None. | [optional]
 **stream_response** | Option<**bool**> | Whether or not to stream the response. If this is set to true or not included, the response will be a stream. If this is set to false, the response will be a normal JSON response. Default is true. | [optional]
+**system_prompt** | Option<**String**> | Optionally, override the system prompt in dataset server settings. | [optional]
 **temperature** | Option<**f32**> | What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. Default is 0.5. | [optional]
 **topic_id** | [**uuid::Uuid**](uuid::Uuid.md) | The ID of the topic to attach the message to. | 
 

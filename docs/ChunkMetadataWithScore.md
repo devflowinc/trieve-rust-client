@@ -10,7 +10,6 @@ Name | Type | Description | Notes
 **id** | [**uuid::Uuid**](uuid::Uuid.md) |  | 
 **link** | Option<**String**> |  | [optional]
 **metadata** | Option<[**serde_json::Value**](.md)> |  | [optional]
-**qdrant_point_id** | Option<[**uuid::Uuid**](uuid::Uuid.md)> |  | [optional]
 **score** | **f32** |  | 
 **tag_set** | Option<**String**> |  | [optional]
 **time_stamp** | Option<**String**> |  | [optional]

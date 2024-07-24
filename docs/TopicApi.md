@@ -23,7 +23,7 @@ Create a new chat topic. Topics are attached to a owner_id's and act as a coordi
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **create_topic_req_payload** | [**CreateTopicReqPayload**](CreateTopicReqPayload.md) | JSON request payload to create chat topic | [required] |
 
 ### Return type
@@ -54,7 +54,7 @@ Delete an existing chat topic. When a topic is deleted, all associated chat mess
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **topic_id** | **uuid::Uuid** | The id of the topic you want to delete. | [required] |
 
 ### Return type
@@ -86,7 +86,7 @@ Get all topics belonging to an arbitary owner_id. This is useful for managing me
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **owner_id** | **String** | The owner_id to get topics of; A common approach is to use a browser fingerprint or your user's id | [required] |
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 
 ### Return type
 
@@ -116,7 +116,7 @@ Update an existing chat topic. Currently, only the name of the topic can be upda
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **update_topic_req_payload** | [**UpdateTopicReqPayload**](UpdateTopicReqPayload.md) | JSON request payload to update a chat topic | [required] |
 
 ### Return type

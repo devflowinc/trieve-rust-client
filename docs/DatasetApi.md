@@ -27,7 +27,7 @@ Clears a dataset. The auth'ed user must be an owner of the organization to clear
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **dataset_id** | **uuid::Uuid** | The id of the dataset you want to clear. | [required] |
 
 ### Return type
@@ -89,7 +89,7 @@ Delete a dataset. The auth'ed user must be an owner of the organization to delet
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **dataset_id** | **uuid::Uuid** | The id of the dataset you want to delete. | [required] |
 
 ### Return type
@@ -120,7 +120,7 @@ Delete a dataset by its tracking id. The auth'ed user must be an owner of the or
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **tracking_id** | **String** | The tracking id of the dataset you want to delete. | [required] |
 
 ### Return type
@@ -151,7 +151,7 @@ Get a dataset by id. Auth'ed user or api key must have an admin or owner role fo
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **dataset_id** | **uuid::Uuid** | The id of the dataset you want to retrieve. | [required] |
 
 ### Return type
@@ -215,7 +215,7 @@ Get the usage for a dataset by its id.
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **dataset_id** | **uuid::Uuid** | The id of the dataset you want to retrieve usage for. | [required] |
 
 ### Return type
@@ -239,7 +239,7 @@ Name | Type | Description  | Required | Notes
 > models::Dataset update_dataset(tr_organization, update_dataset_request)
 Update Dataset
 
-Update a dataset. The auth'ed user must be an owner of the organization to update a dataset.
+Update a dataset by id or tracking_id. One of id or tracking_id must be provided. The auth'ed user must be an owner of the organization to update a dataset.
 
 ### Parameters
 

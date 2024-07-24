@@ -12,7 +12,6 @@ Name | Type | Description | Notes
 **location** | Option<[**models::GeoInfo**](GeoInfo.md)> |  | [optional]
 **metadata** | Option<[**serde_json::Value**](.md)> |  | [optional]
 **num_value** | Option<**f64**> |  | [optional]
-**qdrant_point_id** | Option<[**uuid::Uuid**](uuid::Uuid.md)> |  | [optional]
 **tag_set** | Option<**String**> |  | [optional]
 **time_stamp** | Option<**String**> |  | [optional]
 **tracking_id** | Option<**String**> |  | [optional]

@@ -8,7 +8,6 @@ Name | Type | Description | Notes
 **id** | [**uuid::Uuid**](uuid::Uuid.md) |  | 
 **image_urls** | Option<**Vec<String>**> |  | [optional]
 **num_value** | Option<**f64**> |  | [optional]
-**qdrant_point_id** | Option<[**uuid::Uuid**](uuid::Uuid.md)> |  | [optional]
 **time_stamp** | Option<**String**> |  | [optional]
 **tracking_id** | Option<**String**> |  | [optional]
 **weight** | **f64** |  | 

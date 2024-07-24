@@ -23,7 +23,7 @@ Delete a file from S3 attached to the server based on its id. This will disassoc
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **file_id** | **uuid::Uuid** | The id of the file to delete | [required] |
 
 ### Return type
@@ -54,7 +54,7 @@ Get all files which belong to a given dataset specified by the dataset_id parame
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **dataset_id** | **uuid::Uuid** | The id of the dataset to fetch files for. | [required] |
 **page** | **i64** | The page number of files you wish to fetch. Each page contains at most 10 files. | [required] |
 
@@ -86,7 +86,7 @@ Download a file based on its id.
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **file_id** | **uuid::Uuid** | The id of the file to fetch | [required] |
 
 ### Return type
@@ -117,7 +117,7 @@ Upload a file to S3 attached to the server. The file will be converted to HTML w
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **upload_file_req_payload** | [**UploadFileReqPayload**](UploadFileReqPayload.md) | JSON request payload to upload a file | [required] |
 
 ### Return type

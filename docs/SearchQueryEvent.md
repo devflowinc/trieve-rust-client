@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 **latency** | **f32** |  | 
 **query** | **String** |  | 
 **request_params** | **String** |  | 
-**results** | [**Vec<models::ChunkMetadataStringTagSet>**](ChunkMetadataStringTagSet.md) |  | 
+**results** | [**Vec<models::SearchResultType>**](SearchResultType.md) |  | 
 **search_type** | **String** |  | 
 **top_score** | **f32** |  | 
 

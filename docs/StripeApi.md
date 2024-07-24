@@ -5,7 +5,9 @@ All URIs are relative to *https://api.trieve.ai*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**cancel_subscription**](StripeApi.md#cancel_subscription) | **DELETE** /api/stripe/subscription/{subscription_id} | Cancel Subscription
+[**create_setup_checkout_session**](StripeApi.md#create_setup_checkout_session) | **POST** /api/stripe/checkout/setup/{organization_id} | Create checkout session setup
 [**direct_to_payment_link**](StripeApi.md#direct_to_payment_link) | **GET** /api/stripe/payment_link/{plan_id}/{organization_id} | Checkout
+[**get_all_invoices**](StripeApi.md#get_all_invoices) | **GET** /api/stripe/invoices/{organization_id} | Get All Invoices
 [**get_all_plans**](StripeApi.md#get_all_plans) | **GET** /api/stripe/plans | Get All Plans
 [**update_subscription_plan**](StripeApi.md#update_subscription_plan) | **PATCH** /api/stripe/subscription_plan/{subscription_id}/{plan_id} | Update Subscription Plan
 
@@ -42,12 +44,42 @@ Name | Type | Description  | Required | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
+## create_setup_checkout_session
+
+> models::CreateSetupCheckoutSessionResPayload create_setup_checkout_session(organization_id)
+Create checkout session setup
+
+Create a checkout session (setup)
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**organization_id** | **uuid::Uuid** | The id of the organization to create setup checkout session for. | [required] |
+
+### Return type
+
+[**models::CreateSetupCheckoutSessionResPayload**](CreateSetupCheckoutSessionResPayload.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
 ## direct_to_payment_link
 
 > direct_to_payment_link(plan_id, organization_id)
 Checkout
 
-Get a direct link to the stripe checkout page for the plan and organization
+Get a 303 SeeOther redirect link to the stripe checkout page for the plan and organization
 
 ### Parameters
 
@@ -60,6 +92,36 @@ Name | Type | Description  | Required | Notes
 ### Return type
 
  (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## get_all_invoices
+
+> Vec<models::StripeInvoice> get_all_invoices(organization_id)
+Get All Invoices
+
+Get a list of all invoices
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**organization_id** | **uuid::Uuid** | The id of the organization to get invoices for. | [required] |
+
+### Return type
+
+[**Vec<models::StripeInvoice>**](StripeInvoice.md)
 
 ### Authorization
 

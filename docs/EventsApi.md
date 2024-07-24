@@ -20,7 +20,7 @@ Get events for the dataset specified by the TR-Dataset header.
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **get_events_data** | [**GetEventsData**](GetEventsData.md) | JSON request payload to get events for a dataset | [required] |
 
 ### Return type

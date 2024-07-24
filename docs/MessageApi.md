@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**edit_message**](MessageApi.md#edit_message) | **PUT** /api/message | Edit message
 [**get_all_topic_messages**](MessageApi.md#get_all_topic_messages) | **GET** /api/messages/{messages_topic_id} | Get all messages for a given topic
 [**regenerate_message**](MessageApi.md#regenerate_message) | **DELETE** /api/message | Regenerate message
+[**regenerate_message_patch**](MessageApi.md#regenerate_message_patch) | **PATCH** /api/message | Regenerate message
 
 
 
@@ -23,7 +24,7 @@ Create message. Messages are attached to topics in order to coordinate memory of
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **create_message_req_payload** | [**CreateMessageReqPayload**](CreateMessageReqPayload.md) | JSON request payload to create a message completion | [required] |
 
 ### Return type
@@ -54,7 +55,7 @@ Edit message which exists within the topic's chat history. This will delete the 
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **edit_message_req_payload** | [**EditMessageReqPayload**](EditMessageReqPayload.md) | JSON request payload to edit a message and get a new stream | [required] |
 
 ### Return type
@@ -85,7 +86,7 @@ Get all messages for a given topic. If the topic is a RAG topic then the respons
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **messages_topic_id** | **uuid::Uuid** | The ID of the topic to get messages for. | [required] |
 
 ### Return type
@@ -116,7 +117,38 @@ Regenerate the assistant response to the last user message of a topic. This will
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**tr_dataset** | **String** | The dataset id to use for the request | [required] |
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
+**regenerate_message_req_payload** | [**RegenerateMessageReqPayload**](RegenerateMessageReqPayload.md) | JSON request payload to delete an agent message then regenerate it in a strem | [required] |
+
+### Return type
+
+**String**
+
+### Authorization
+
+[ApiKey](../README.md#ApiKey)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: text/plain, application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## regenerate_message_patch
+
+> String regenerate_message_patch(tr_dataset, regenerate_message_req_payload)
+Regenerate message
+
+Regenerate the assistant response to the last user message of a topic. This will delete the last message and replace it with a new message. The response will include Chunks first on the stream if the topic is using RAG. The structure will look like `[chunks]||mesage`. See docs.trieve.ai for more information. Auth'ed user or api key must have an admin or owner role for the specified dataset's organization.
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
 **regenerate_message_req_payload** | [**RegenerateMessageReqPayload**](RegenerateMessageReqPayload.md) | JSON request payload to delete an agent message then regenerate it in a strem | [required] |
 
 ### Return type

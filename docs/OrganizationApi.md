@@ -9,13 +9,14 @@ Method | HTTP request | Description
 [**get_organization**](OrganizationApi.md#get_organization) | **GET** /api/organization/{organization_id} | Get Organization
 [**get_organization_usage**](OrganizationApi.md#get_organization_usage) | **GET** /api/organization/usage/{organization_id} | Get Organization Usage
 [**get_organization_users**](OrganizationApi.md#get_organization_users) | **GET** /api/organization/users/{organization_id} | Get Organization Users
+[**update_all_org_dataset_configs**](OrganizationApi.md#update_all_org_dataset_configs) | **POST** /api/organization/update_dataset_configs | Update All Dataset Configurations
 [**update_organization**](OrganizationApi.md#update_organization) | **PUT** /api/organization | Update Organization
 
 
 
 ## create_organization
 
-> models::Organization create_organization(create_organization_data)
+> models::Organization create_organization(create_organization_req_payload)
 Create Organization
 
 Create a new organization. The auth'ed user who creates the organization will be the default owner of the organization.
@@ -25,7 +26,7 @@ Create a new organization. The auth'ed user who creates the organization will be
 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
-**create_organization_data** | [**CreateOrganizationData**](CreateOrganizationData.md) | The organization data that you want to create | [required] |
+**create_organization_req_payload** | [**CreateOrganizationReqPayload**](CreateOrganizationReqPayload.md) | The organization data that you want to create | [required] |
 
 ### Return type
 
@@ -167,9 +168,40 @@ Name | Type | Description  | Required | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 
+## update_all_org_dataset_configs
+
+> update_all_org_dataset_configs(tr_organization, update_all_org_dataset_configs_req_payload)
+Update All Dataset Configurations
+
+Update the configurations for all datasets in an organization. Only the specified keys in the configuration object will be changed per dataset such that you can preserve dataset unique values. Auth'ed user or api key must have an owner role for the specified organization.
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**tr_organization** | **String** | The organization id to use for the request | [required] |
+**update_all_org_dataset_configs_req_payload** | [**UpdateAllOrgDatasetConfigsReqPayload**](UpdateAllOrgDatasetConfigsReqPayload.md) | The organization data that you want to create | [required] |
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[ApiKey](../README.md#ApiKey)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
 ## update_organization
 
-> models::Organization update_organization(tr_organization, update_organization_data)
+> models::Organization update_organization(tr_organization, update_organization_req_payload)
 Update Organization
 
 Update an organization. Only the owner of the organization can update it.
@@ -180,7 +212,7 @@ Update an organization. Only the owner of the organization can update it.
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **tr_organization** | **String** | The organization id to use for the request | [required] |
-**update_organization_data** | [**UpdateOrganizationData**](UpdateOrganizationData.md) | The organization data that you want to update | [required] |
+**update_organization_req_payload** | [**UpdateOrganizationReqPayload**](UpdateOrganizationReqPayload.md) | The organization data that you want to update | [required] |
 
 ### Return type
 
