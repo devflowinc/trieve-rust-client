@@ -15,7 +15,7 @@ Method | HTTP request | Description
 [**get_chunks_by_ids**](ChunkApi.md#get_chunks_by_ids) | **POST** /api/chunks | Get Chunks By Ids
 [**get_chunks_by_tracking_ids**](ChunkApi.md#get_chunks_by_tracking_ids) | **POST** /api/chunks/tracking | Get Chunks By Tracking Ids
 [**get_recommended_chunks**](ChunkApi.md#get_recommended_chunks) | **POST** /api/chunk/recommend | Get Recommended Chunks
-[**get_suggested_queries**](ChunkApi.md#get_suggested_queries) | **POST** /api/chunk/gen_suggestions | Generate suggested queries
+[**get_suggested_queries**](ChunkApi.md#get_suggested_queries) | **POST** /api/chunk/suggestions | Generate suggested queries
 [**scroll_dataset_chunks**](ChunkApi.md#scroll_dataset_chunks) | **POST** /api/chunks/scroll | Scroll Chunks
 [**search_chunks**](ChunkApi.md#search_chunks) | **POST** /api/chunk/search | Search
 [**update_chunk**](ChunkApi.md#update_chunk) | **PUT** /api/chunk | Update Chunk
@@ -181,10 +181,10 @@ Name | Type | Description  | Required | Notes
 
 ## generate_off_chunks
 
-> String generate_off_chunks(tr_dataset, generate_chunks_request)
+> String generate_off_chunks(tr_dataset, generate_off_chunks_req_payload)
 RAG on Specified Chunks
 
-This endpoint exists as an alternative to the topic+message concept where our API handles chat memory. With this endpoint, the user is responsible for providing the context window and the prompt. See more in the \"search before generate\" page at docs.trieve.ai.
+This endpoint exists as an alternative to the topic+message resource pattern where our Trieve handles chat memory. With this endpoint, the user is responsible for providing the context window and the prompt and the conversation is ephemeral.
 
 ### Parameters
 
@@ -192,7 +192,7 @@ This endpoint exists as an alternative to the topic+message concept where our AP
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
-**generate_chunks_request** | [**GenerateChunksRequest**](GenerateChunksRequest.md) | JSON request payload to perform RAG on some chunks (chunks) | [required] |
+**generate_off_chunks_req_payload** | [**GenerateOffChunksReqPayload**](GenerateOffChunksReqPayload.md) | JSON request payload to perform RAG on some chunks (chunks) | [required] |
 
 ### Return type
 
@@ -343,7 +343,7 @@ Name | Type | Description  | Required | Notes
 > models::RecommendResponseTypes get_recommended_chunks(tr_dataset, recommend_chunks_request, x_api_version)
 Get Recommended Chunks
 
-Get recommendations of chunks similar to the positive samples in the request and dissimilar to the negative. You must provide at least one of either positive_chunk_ids or positive_tracking_ids.
+Get recommendations of chunks similar to the positive samples in the request and dissimilar to the negative.
 
 ### Parameters
 
@@ -403,10 +403,10 @@ Name | Type | Description  | Required | Notes
 
 ## scroll_dataset_chunks
 
-> models::ScrollChunksReqPayload scroll_dataset_chunks(tr_dataset, scroll_chunks_req_payload)
+> models::ScrollChunksResponseBody scroll_dataset_chunks(tr_dataset, scroll_chunks_req_payload)
 Scroll Chunks
 
-Get paginated chunks from your dataset with filters and custom sorting. If sort by is not specified, the results will sort by the id's of the chunks in ascending order.
+Get paginated chunks from your dataset with filters and custom sorting. If sort by is not specified, the results will sort by the id's of the chunks in ascending order. Sort by and offset_chunk_id cannot be used together; if you want to scroll with a sort by then you need to use a must_not filter with the ids you have already seen. There is a limit of 1000 id's in a must_not filter at a time.
 
 ### Parameters
 
@@ -414,11 +414,11 @@ Get paginated chunks from your dataset with filters and custom sorting. If sort 
 Name | Type | Description  | Required | Notes
 ------------- | ------------- | ------------- | ------------- | -------------
 **tr_dataset** | **String** | The dataset id or tracking_id to use for the request. We assume you intend to use an id if the value is a valid uuid. | [required] |
-**scroll_chunks_req_payload** | [**ScrollChunksReqPayload**](ScrollChunksReqPayload.md) |  | [required] |
+**scroll_chunks_req_payload** | [**ScrollChunksReqPayload**](ScrollChunksReqPayload.md) | JSON request payload to scroll through chunks (chunks) | [required] |
 
 ### Return type
 
-[**models::ScrollChunksReqPayload**](ScrollChunksReqPayload.md)
+[**models::ScrollChunksResponseBody**](ScrollChunksResponseBody.md)
 
 ### Authorization
 

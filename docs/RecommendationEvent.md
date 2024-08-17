@@ -12,9 +12,10 @@ Name | Type | Description | Notes
 **positive_ids** | [**Vec<uuid::Uuid>**](uuid::Uuid.md) |  | 
 **positive_tracking_ids** | **Vec<String>** |  | 
 **recommendation_type** | **String** |  | 
-**request_params** | **String** |  | 
-**results** | [**Vec<models::SearchResultType>**](SearchResultType.md) |  | 
+**request_params** | Option<[**serde_json::Value**](.md)> |  | 
+**results** | [**Vec<serde_json::Value>**](serde_json::Value.md) |  | 
 **top_score** | **f32** |  | 
+**user_id** | **String** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

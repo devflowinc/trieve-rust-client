@@ -6,6 +6,7 @@
 |---- | -----|
 | Semantic | semantic |
 | Fulltext | fulltext |
+| Bm25 | bm25 |
 | CrossEncoder | cross_encoder |
 
 

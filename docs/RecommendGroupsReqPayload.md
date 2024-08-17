@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **recommend_type** | Option<[**models::RecommendType**](RecommendType.md)> |  | [optional]
 **slim_chunks** | Option<**bool**> | Set slim_chunks to true to avoid returning the content and chunk_html of the chunks. This is useful for when you want to reduce amount of data over the wire for latency improvement (typicall 10-50ms). Default is false. | [optional]
 **strategy** | Option<[**models::RecommendationStrategy**](RecommendationStrategy.md)> |  | [optional]
+**user_id** | Option<**String**> | The user_id is the id of the user who is making the request. This is used to track user interactions with the rrecommendation results. | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

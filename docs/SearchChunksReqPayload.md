@@ -7,23 +7,17 @@ Name | Type | Description | Notes
 **content_only** | Option<**bool**> | Set content_only to true to only returning the chunk_html of the chunks. This is useful for when you want to reduce amount of data over the wire for latency improvement (typically 10-50ms). Default is false. | [optional]
 **filters** | Option<[**models::ChunkFilter**](ChunkFilter.md)> |  | [optional]
 **get_total_pages** | Option<**bool**> | Get total page count for the query accounting for the applied filters. Defaults to false, but can be set to true when the latency penalty is acceptable (typically 50-200ms). | [optional]
-**highlight_delimiters** | Option<**Vec<String>**> | Set highlight_delimiters to a list of strings to use as delimiters for highlighting. If not specified, this defaults to [\"?\", \",\", \".\", \"!\"]. These are the characters that will be used to split the chunk_html into splits for highlighting. These are the characters that will be used to split the chunk_html into splits for highlighting. | [optional]
-**highlight_max_length** | Option<**i32**> | Set highlight_max_length to control the maximum number of tokens (typically whitespace separated strings, but sometimes also word stems) which can be present within a single highlight. If not specified, this defaults to 8. This is useful to shorten large splits which may have low scores due to length compared to the query. Set to something very large like 100 to highlight entire splits. | [optional]
-**highlight_max_num** | Option<**i32**> | Set highlight_max_num to control the maximum number of highlights per chunk. If not specified, this defaults to 3. It may be less than 3 if no snippets score above the highlight_threshold. | [optional]
-**highlight_results** | Option<**bool**> | Set highlight_results to false for a slight latency improvement (1-10ms). If not specified, this defaults to true. This will add `<b><mark>` tags to the chunk_html of the chunks to highlight matching splits and return the highlights on each scored chunk in the response. | [optional]
-**highlight_threshold** | Option<**f64**> | Set highlight_threshold to a lower or higher value to adjust the sensitivity of the highlights applied to the chunk html. If not specified, this defaults to 0.8. The range is 0.0 to 1.0. | [optional]
-**highlight_window** | Option<**i32**> | Set highlight_window to a number to control the amount of words that are returned around the matched phrases. If not specified, this defaults to 0. This is useful for when you want to show more context around the matched words. When specified, window/2 whitespace separated words are added before and after each highlight in the response's highlights array. If an extended highlight overlaps with another highlight, the overlapping words are only included once. | [optional]
-**location_bias** | Option<[**models::GeoInfoWithBias**](GeoInfoWithBias.md)> |  | [optional]
+**highlight_options** | Option<[**models::HighlightOptions**](HighlightOptions.md)> |  | [optional]
 **page** | Option<**i64**> | Page of chunks to fetch. Page is 1-indexed. | [optional]
 **page_size** | Option<**i64**> | Page size is the number of chunks to fetch. This can be used to fetch more than 10 chunks at a time. | [optional]
-**query** | **String** | Query is the search query. This can be any string. The query will be used to create an embedding vector and/or SPLADE vector which will be used to find the result set. | 
-**score_threshold** | Option<**f32**> | Set score_threshold to a float to filter out chunks with a score below the threshold. This threshold applies before weight and bias modifications. If not specified, this defaults to 0.0. | [optional]
+**query** | [**models::QueryTypes**](QueryTypes.md) |  | 
+**remove_stop_words** | Option<**bool**> | If true, stop words (specified in server/src/stop-words.txt in the git repo) will be removed. Queries that are entirely stop words will be preserved. | [optional]
+**score_threshold** | Option<**f32**> | Set score_threshold to a float to filter out chunks with a score below the threshold for cosine distance metric For Manhattan Distance, Euclidean Distance, and Dot Product, it will filter out scores above the threshold distance This threshold applies before weight and bias modifications. If not specified, this defaults to no threshold A threshold of 0 will default to no threashold | [optional]
 **search_type** | [**models::SearchMethod**](SearchMethod.md) |  | 
 **slim_chunks** | Option<**bool**> | Set slim_chunks to true to avoid returning the content and chunk_html of the chunks. This is useful for when you want to reduce amount of data over the wire for latency improvement (typically 10-50ms). Default is false. | [optional]
-**sort_by** | Option<[**models::QdrantSortBy**](QdrantSortBy.md)> |  | [optional]
-**tag_weights** | Option<**std::collections::HashMap<String, f32>**> | Tag weights is a JSON object which can be used to boost the ranking of chunks with certain tags. This is useful for when you want to be able to bias towards chunks with a certain tag on the fly. The keys are the tag names and the values are the weights. | [optional]
+**sort_options** | Option<[**models::SortOptions**](SortOptions.md)> |  | [optional]
 **use_quote_negated_terms** | Option<**bool**> | If true, quoted and - prefixed words will be parsed from the queries and used as required and negated words respectively. Default is false. | [optional]
-**use_weights** | Option<**bool**> | Set use_weights to true to use the weights of the chunks in the result set in order to sort them. If not specified, this defaults to true. | [optional]
+**user_id** | Option<**String**> | User ID is the id of the user who is making the request. This is used to track user interactions with the search results. | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

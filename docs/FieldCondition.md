@@ -9,7 +9,8 @@ Name | Type | Description | Notes
 **geo_bounding_box** | Option<[**models::LocationBoundingBox**](LocationBoundingBox.md)> |  | [optional]
 **geo_polygon** | Option<[**models::LocationPolygon**](LocationPolygon.md)> |  | [optional]
 **geo_radius** | Option<[**models::LocationRadius**](LocationRadius.md)> |  | [optional]
-**r#match** | Option<[**Vec<models::MatchCondition>**](MatchCondition.md)> | Match is the value to match on the field. The match value will be used to check for an exact substring match on the metadata values for each existing chunk. This is useful for when you want to filter chunks by arbitrary metadata. | [optional]
+**match_all** | Option<[**Vec<models::MatchCondition>**](MatchCondition.md)> | Match all lets you pass in an array of values that will return results if all of the items match. The match value will be used to check for an exact substring match on the metadata values for each existing chunk. If both match_all and match_any are provided, the match_any condition will be used. | [optional]
+**match_any** | Option<[**Vec<models::MatchCondition>**](MatchCondition.md)> | Match any lets you pass in an array of values that will return results if any of the items match. The match value will be used to check for an exact substring match on the metadata values for each existing chunk. If both match_all and match_any are provided, the match_any condition will be used. | [optional]
 **range** | Option<[**models::Range**](Range.md)> |  | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

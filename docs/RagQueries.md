@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **filter** | Option<[**models::RagAnalyticsFilter**](RAGAnalyticsFilter.md)> |  | [optional]
 **page** | Option<**i32**> |  | [optional]
-**sort_by** | Option<[**models::SortBy**](SortBy.md)> |  | [optional]
+**sort_by** | Option<[**models::RagSortBy**](RAGSortBy.md)> |  | [optional]
 **sort_order** | Option<[**models::SortOrder**](SortOrder.md)> |  | [optional]
 **r#type** | **String** |  | 
 
